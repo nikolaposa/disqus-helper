@@ -12,6 +12,7 @@ namespace DisqusHelper;
 
 use DisqusHelper\Widget\WidgetInterface as Widget;
 use DisqusHelper\Exception\BadMethodCallException;
+use DisqusHelper\Exception\RuntimeException;
 
 /**
  * @author Nikola Posa <posa.nikola@gmail.com>
@@ -113,7 +114,7 @@ final class Disqus
     public function init()
     {
         if ($this->initialized) {
-            throw new RuntimeException(__CLASS__ . ' widget has already been initialized');
+            throw new RuntimeException(get_class($this) . ' widget has already been initialized');
         }
 
         $html = '<script type="text/javascript">';

@@ -11,15 +11,17 @@
 namespace DisqusHelper\Widget;
 
 /**
- * Renders Disqus comments thread.
+ * Comments thread widget.
  *
  * @author Nikola Posa <posa.nikola@gmail.com>
  */
 final class Thread implements WidgetInterface
 {
+    const SCRIPT_NAME = 'embed.js';
+
     public function getScriptName()
     {
-        return 'embed.js';
+        return self::SCRIPT_NAME;
     }
 
     public function render(array $options = array())

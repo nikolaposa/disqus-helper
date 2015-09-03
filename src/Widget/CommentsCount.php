@@ -13,12 +13,14 @@ namespace DisqusHelper\Widget;
 use DisqusHelper\Exception\RuntimeException;
 
 /**
- * Renders comments count link.
+ * Comments count widget.
  *
  * @author Nikola Posa <posa.nikola@gmail.com>
  */
 final class CommentsCount extends BaseWidget
 {
+    const SCRIPT_NAME = 'count.js';
+
     /**
      * @var array
      */
@@ -31,7 +33,7 @@ final class CommentsCount extends BaseWidget
 
     public function getScriptName()
     {
-        return 'count.js';
+        return self::SCRIPT_NAME;
     }
 
     public function render(array $options = array())
@@ -54,7 +56,6 @@ final class CommentsCount extends BaseWidget
             }
 
             $url = $options['url'] . '#disqus_thread';
-            $url .= '#disqus_thread';
 
             $html = '<a href="' . $url . '"'
                 . ' ' . $this->htmlAttribs($attribs) . '>'
