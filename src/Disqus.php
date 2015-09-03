@@ -137,8 +137,8 @@ final class Disqus
             $html .= $indent . $indent . 'var s = document.createElement("script");' . PHP_EOL;
             $html .= $indent . $indent . 's.type = "text/javascript";' . PHP_EOL;
             $html .= $indent . $indent . 's.async = true;' . PHP_EOL;
-            $html .= $indent . $indent . 's.src = "//" + disqus_shortname + ".disqus.com/' . $widget->getScriptName() . '"' . PHP_EOL;
-            $html .= $indent . $indent . '(document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(s)' . PHP_EOL;
+            $html .= $indent . $indent . 's.src = "//" + disqus_shortname + ".disqus.com/' . $widget->getScriptName() . '";' . PHP_EOL;
+            $html .= $indent . $indent . '(document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(s);' . PHP_EOL;
             $html .= $indent . '})();' . PHP_EOL;
 
             $html .= PHP_EOL;
