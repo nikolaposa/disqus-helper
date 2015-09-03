@@ -34,7 +34,7 @@ $disqus = new Disqus('disqus_shortname', array(
 ```
 
 **Template**
-```html
+```phtml
 <html>
     <head>
         <title>Blog</title>
