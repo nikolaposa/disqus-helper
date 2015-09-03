@@ -1,0 +1,28 @@
+{
+    "name": "nikolaposa/disqus-helper",
+    "description": "PHP library which facilitates integration of Disqus widgets.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "disqus",
+        "widget",
+        "helper"
+    ],
+    "homepage": "https://github.com/nikolaposa/disqus-helper",
+    "authors": [
+        {
+            "name": "Nikola Poša",
+            "email": "posa.nikola@gmail.com",
+            "homepage": "http://www.nikolaposa.in.rs"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "autoload": {
+        "psr-4": { "DisqusHelper\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "DisqusHelper\\Tests\\": "tests/" }
+    }
+}
