@@ -34,7 +34,7 @@ $disqus = new Disqus('disqus_shortname', array(
 ```
 
 **Template**
-```php
+```html
 <html>
     <head>
         <title>Blog</title>
@@ -43,6 +43,7 @@ $disqus = new Disqus('disqus_shortname', array(
     <body>
         <article>
             <h1>My article</h1>
+            <!-- Comments count widget -->
             <?php echo $disqus->commentsCount(array('url' => 'http://example.com/article1.html')); ?>
 
             <p>My article text</p>
@@ -50,8 +51,12 @@ $disqus = new Disqus('disqus_shortname', array(
 
         <div>
             <h2>Comments:</h2>
+            <!-- Thread widget -->
             <?php echo $disqus->thread(); ?>
         </div>
+
+        <!-- MUST be called at the end, usually before closing </body> tag -->
+        <?php echo $disqus->init(); ?>
     </body>
 </html>
 ```
