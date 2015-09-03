@@ -100,6 +100,39 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('</script>', $html);
     }
 
+    public function testInitRendersWidgetAssets()
+    {
+        $disqus = new Disqus('blog', array(
+            'title' => 'My article',
+            'identifier' => 'article1'
+        ));
+
+        $html = $disqus->thread();
+
+        $html .= ' ' . $disqus->init();
+
+        $this->assertContains('<script', $html);
+        $this->assertContains(\DisqusHelper\Widget\Thread::SCRIPT_NAME, $html);
+        $this->assertContains('</script>', $html);
+    }
+
+    public function testInitRendersWidgetAssetsOnlyOnceRegardlessOfNumberOfWidgetInvokations()
+    {
+        $disqus = new Disqus('blog', array(
+            'title' => 'My article',
+            'identifier' => 'article1'
+        ));
+
+        $html = $disqus->thread();
+        $html .= ' ' . $disqus->thread();
+
+        $html .= ' ' . $disqus->init();
+
+        $this->assertContains('<script', $html);
+        $this->assertEquals(1, substr_count($html, \DisqusHelper\Widget\Thread::SCRIPT_NAME), 'Widget script rendered multiple times');
+        $this->assertContains('</script>', $html);
+    }
+
     /**
      * @expectedException \DisqusHelper\Exception\RuntimeException
      */

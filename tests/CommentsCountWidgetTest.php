@@ -43,6 +43,14 @@ class CommentsCountWidgetTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @expectedException \DisqusHelper\Exception\RuntimeException
+     */
+    public function testLinkRenderingFailsIfUrlIsMissing()
+    {
+        $this->widget->render(array('label' => 'Test'));
+    }
+
     public function testRenderingLinkWithFragmentInHref()
     {
         $html = $this->widget->render(array('url' => 'http://example.com/article1.html'));
@@ -68,5 +76,21 @@ class CommentsCountWidgetTest extends \PHPUnit_Framework_TestCase
         ));
 
         $this->assertHtmlTag($html, 'a', 'Test');
+    }
+
+    public function testRenderingSpanTag()
+    {
+        $html = $this->widget->render(array(
+            'as_link' => false,
+            'url' => 'http://example.com/article1.html',
+            'identifier' => 'article1',
+            'label' => 'Test'
+        ));
+
+        $this->assertHtmlTag($html, 'span', 'Test', array(
+            'class' => 'disqus-comment-count',
+            'url' => 'http://example.com/article1.html',
+            'identifier' => 'article1'
+        ));
     }
 }
