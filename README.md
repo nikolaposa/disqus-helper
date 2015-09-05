@@ -28,10 +28,7 @@ $ php composer.phar install
 ```php
 use DisqusHelper\Disqus;
 
-$disqus = new Disqus('disqus_shortname', array(
-    'title' => 'My article',
-    'identifier' => 'article1'
-));
+$disqus = new Disqus('disqus_shortname');
 
 ```
 
@@ -58,7 +55,9 @@ $disqus = new Disqus('disqus_shortname', array(
         </div>
 
         <!-- MUST be called at the end, usually before closing </body> tag -->
-        <?php echo $disqus->init(); ?>
+        <?php echo $disqus(); ?>
     </body>
 </html>
 ```
+
+See [more examples](https://github.com/nikolaposa/disqus-helper/tree/master/examples).

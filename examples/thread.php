@@ -3,11 +3,11 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use DisqusHelper\Disqus;
 
-$disqus = new Disqus('blog', array(
-    'title' => 'My article',
-    'identifier' => 'article1'
-));
+$disqus = new Disqus('blog');
 
 echo $disqus->thread() . "\n\n";
 
-echo $disqus->init();
+echo $disqus(array(
+    'title' => 'My article',
+    'identifier' => 'article1'
+));
