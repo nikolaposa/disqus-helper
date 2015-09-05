@@ -79,6 +79,26 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEmpty($html);
     }
 
+    /**
+     * @expectedException \DisqusHelper\Exception\InvalidArgumentException
+     */
+    public function testWidgetInvokeOptionsValidation()
+    {
+        $disqus = new Disqus('foobar');
+
+        $html = $disqus->thread('test');
+    }
+
+    /**
+     * @expectedException \DisqusHelper\Exception\InvalidArgumentException
+     */
+    public function testWidgetInvokeWithConfigValidation()
+    {
+        $disqus = new Disqus('foobar');
+
+        $html = $disqus->thread(array(), 'test');
+    }
+
     public function testConfigRenderedProperly()
     {
         $disqus = new Disqus('blog', array(
@@ -121,6 +141,27 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Article 2', $html);
         $this->assertContains('identifier', $html);
         $this->assertContains('article2', $html);
+        $this->assertContains('</script>', $html);
+    }
+
+    public function testConfigSuppliedThroughWidgetInvokation()
+    {
+        $disqus = new Disqus('blog');
+
+        $html = $disqus->thread(array(), array(
+            'title' => 'Article 1',
+            'identifier' => 'article1'
+        ));
+
+        $html .= ' ' . $disqus();
+
+        $this->assertContains('<script', $html);
+        $this->assertContains('shortname', $html);
+        $this->assertContains('blog', $html);
+        $this->assertContains('title', $html);
+        $this->assertContains('Article 1', $html);
+        $this->assertContains('identifier', $html);
+        $this->assertContains('article1', $html);
         $this->assertContains('</script>', $html);
     }
 

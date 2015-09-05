@@ -5,9 +5,9 @@ use DisqusHelper\Disqus;
 
 $disqus = new Disqus('blog');
 
-echo $disqus->thread() . "\n\n";
-
-echo $disqus(array(
+echo $disqus->thread(array(), array(
     'title' => 'My article',
     'identifier' => 'article1'
-));
+)) . "\n\n";
+
+echo $disqus();

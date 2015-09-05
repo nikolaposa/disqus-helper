@@ -51,7 +51,10 @@ $disqus = new Disqus('disqus_shortname');
         <div>
             <h2>Comments:</h2>
             <!-- Thread widget -->
-            <?php echo $disqus->thread(); ?>
+            <?php echo $disqus->thread(array(), array(
+                'title' => 'My article',
+                'identifier' => 'article1'
+            )); ?>
         </div>
 
         <!-- MUST be called at the end, usually before closing </body> tag -->

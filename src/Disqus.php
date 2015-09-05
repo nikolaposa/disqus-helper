@@ -11,8 +11,7 @@
 namespace DisqusHelper;
 
 use DisqusHelper\Widget\WidgetInterface as Widget;
-use DisqusHelper\Exception\BadMethodCallException;
-use DisqusHelper\Exception\RuntimeException;
+use DisqusHelper\Exception;
 
 /**
  * @author Nikola Posa <posa.nikola@gmail.com>
@@ -88,7 +87,8 @@ final class Disqus
      *
      * @param  string $method
      * @param  array  $args
-     * @throws BadMethodCallException
+     * @throws Exception\BadMethodCallException
+     * @throws Exception\InvalidArgumentException
      * @return string
      */
     public function __call($method, $args)
@@ -98,19 +98,32 @@ final class Disqus
         $widget = $this->getWidget($widgetName);
 
         if ($widget === null) {
-            throw new BadMethodCallException("'$method' widget does not exist");
+            throw new Exception\BadMethodCallException("'$method' widget does not exist");
+        }
+
+        if (($options = array_shift($args)) !== null) {
+            if (!is_array($options)) {
+                throw new Exception\InvalidArgumentException("Widget options argument should be array");
+            }
+        }
+
+        if (($config = array_shift($args)) !== null) {
+            if (!is_array($config)) {
+                throw new Exception\InvalidArgumentException("Disqus configuration argument should be array");
+            }
+
+            $this->config = array_merge($this->config, $config);
         }
 
         if (!isset($this->usedWidgets[$widgetName])) {
             $this->usedWidgets[$widgetName] = $widget;
         }
 
-        return call_user_func_array(array($widget, 'render'), $args);
+        return $widget->render($options ?: array());
     }
 
     /**
      * @return string
-     * @throws RuntimeException
      * @deprecated Please use __invoke()
      */
     public function init()
@@ -130,12 +143,12 @@ final class Disqus
      *
      * @param array $config OPTIONAL Disqus configuration (https://help.disqus.com/customer/portal/articles/472098-javascript-configuration-variables)
      * @return string
-     * @throws RuntimeException
+     * @throws Exception\RuntimeException
      */
     public function __invoke(array $config = array())
     {
         if ($this->initialized) {
-            throw new RuntimeException(get_class($this) . ' widget has already been initialized');
+            throw new Exception\RuntimeException(get_class($this) . ' widget has already been initialized');
         }
 
         $config = array_merge($this->config, $config);
