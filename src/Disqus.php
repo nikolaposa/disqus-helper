@@ -32,6 +32,9 @@ final class Disqus
         'commentscount' => 'DisqusHelper\\Widget\\CommentsCount'
     );
 
+    /**
+     * @var array
+     */
     private $usedWidgets = array();
 
     /**
@@ -41,7 +44,7 @@ final class Disqus
 
     /**
      * @param string $shortName Unique identifier of some Disqus website.
-     * @param array $config Any additional Disqus configuration
+     * @param array $config OPTIONAL Any additional Disqus configuration.
      * @link https://help.disqus.com/customer/portal/articles/472098-javascript-configuration-variables
      */
     public function __construct($shortName, array $config = array())
@@ -106,21 +109,41 @@ final class Disqus
     }
 
     /**
-     * Initializes used widgets by loading/rendering necessary assets.
+     * @return string
+     * @throws RuntimeException
+     * @deprecated Please use __invoke()
+     */
+    public function init()
+    {
+        trigger_error(
+            'This method is deprecated and will be removed in the future. Please use __invoke() instead.',
+            E_USER_DEPRECATED
+        );
+
+        return $this->__invoke();
+    }
+
+    /**
+     * Loads Disqus configuration and necessary assets for used widgets.
      *
+     * This method should be called after using and rendering widgets, usually before closing </body> tag.
+     *
+     * @param array $config OPTIONAL Disqus configuration (https://help.disqus.com/customer/portal/articles/472098-javascript-configuration-variables)
      * @return string
      * @throws RuntimeException
      */
-    public function init()
+    public function __invoke(array $config = array())
     {
         if ($this->initialized) {
             throw new RuntimeException(get_class($this) . ' widget has already been initialized');
         }
 
+        $config = array_merge($this->config, $config);
+
         $html = '<script type="text/javascript">';
         $indent = '    ';
 
-        foreach ($this->config as $key => $value) {
+        foreach ($config as $key => $value) {
             $html .= PHP_EOL;
 
             if (is_string($value)) {

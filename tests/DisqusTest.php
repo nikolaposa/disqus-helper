@@ -79,7 +79,7 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEmpty($html);
     }
 
-    public function testInitRendersConfig()
+    public function testConfigRenderedProperly()
     {
         $disqus = new Disqus('blog', array(
             'title' => 'My article',
@@ -88,7 +88,7 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
 
         $html = $disqus->thread();
 
-        $html .= ' ' . $disqus->init();
+        $html .= ' ' . $disqus();
 
         $this->assertContains('<script', $html);
         $this->assertContains('shortname', $html);
@@ -100,7 +100,7 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('</script>', $html);
     }
 
-    public function testInitRendersWidgetAssets()
+    public function testConfigSuppliedOnInvokeRenderedProperly()
     {
         $disqus = new Disqus('blog', array(
             'title' => 'My article',
@@ -109,14 +109,35 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
 
         $html = $disqus->thread();
 
-        $html .= ' ' . $disqus->init();
+        $html .= ' ' . $disqus(array(
+            'title' => 'Article 2',
+            'identifier' => 'article2'
+        ));
+
+        $this->assertContains('<script', $html);
+        $this->assertContains('shortname', $html);
+        $this->assertContains('blog', $html);
+        $this->assertContains('title', $html);
+        $this->assertContains('Article 2', $html);
+        $this->assertContains('identifier', $html);
+        $this->assertContains('article2', $html);
+        $this->assertContains('</script>', $html);
+    }
+
+    public function testRenderingWidgetAssets()
+    {
+        $disqus = new Disqus('blog');
+
+        $html = $disqus->thread();
+
+        $html .= ' ' . $disqus();
 
         $this->assertContains('<script', $html);
         $this->assertContains(\DisqusHelper\Widget\Thread::SCRIPT_NAME, $html);
         $this->assertContains('</script>', $html);
     }
 
-    public function testInitRendersWidgetAssetsOnlyOnceRegardlessOfNumberOfWidgetInvokations()
+    public function testRenderingWidgetAssetsOnlyOnceRegardlessOfNumberOfWidgetInvokations()
     {
         $disqus = new Disqus('blog', array(
             'title' => 'My article',
@@ -126,7 +147,7 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
         $html = $disqus->thread();
         $html .= ' ' . $disqus->thread();
 
-        $html .= ' ' . $disqus->init();
+        $html .= ' ' . $disqus();
 
         $this->assertContains('<script', $html);
         $this->assertEquals(1, substr_count($html, \DisqusHelper\Widget\Thread::SCRIPT_NAME), 'Widget script rendered multiple times');
@@ -142,8 +163,8 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
 
         $disqus->thread();
 
-        $disqus->init();
+        $disqus();
 
-        $disqus->init();
+        $disqus();
     }
 }
