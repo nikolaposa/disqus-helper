@@ -123,20 +123,6 @@ final class Disqus
     }
 
     /**
-     * @return string
-     * @deprecated Please use __invoke()
-     */
-    public function init()
-    {
-        trigger_error(
-            'This method is deprecated and will be removed in the future. Please use __invoke() instead.',
-            E_USER_DEPRECATED
-        );
-
-        return $this->__invoke();
-    }
-
-    /**
      * Loads Disqus configuration and necessary assets for used widgets.
      *
      * This method should be called after using and rendering widgets, usually before closing </body> tag.
