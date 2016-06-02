@@ -1,9 +1,9 @@
 # Disqus helper
 
-PHP library which facilitates integration of [Disqus](https://disqus.com/) widgets.
-
 [![Build Status](https://travis-ci.org/nikolaposa/disqus-helper.svg?branch=master)](https://travis-ci.org/nikolaposa/disqus-helper)
 [![Latest Stable Version](https://poser.pugx.org/nikolaposa/disqus-helper/v/stable)](https://packagist.org/packages/nikolaposa/disqus-helper)
+
+PHP library which facilitates integration of [Disqus](https://disqus.com/) widgets.
 
 ## Installation
 
