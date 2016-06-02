@@ -1,25 +1,17 @@
 # Disqus helper
 
+[![Latest Stable Version](https://poser.pugx.org/nikolaposa/disqus-helper/v/stable)](https://packagist.org/packages/nikolaposa/disqus-helper)
 [![Build Status](https://travis-ci.org/nikolaposa/disqus-helper.svg?branch=master)](https://travis-ci.org/nikolaposa/disqus-helper)
 
 PHP library which facilitates integration of [Disqus](https://disqus.com/) widgets.
 
 ## Installation
 
-Install the library using [composer](http://getcomposer.org/). Add the following to your `composer.json`:
-
-```json
-{
-    "require": {
-        "nikolaposa/disqus-helper": "1.*"
-    }
-}
-```
-
-Tell composer to download DisqusHelper by running `install` command:
+The preferred method of installation is via [Composer](http://getcomposer.org/). Run the following
+command to install the latest version of a package and add it to your project's `composer.json`:
 
 ```bash
-$ php composer.phar install
+composer require nikolaposa/disqus-helper
 ```
 
 ## Usage
