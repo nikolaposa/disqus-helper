@@ -56,3 +56,14 @@ $disqus = new Disqus('disqus_shortname');
 ```
 
 See [more examples](https://github.com/nikolaposa/disqus-helper/tree/master/examples).
+
+## Author
+
+**Nikola Poša**
+
+* https://twitter.com/nikolaposa
+* https://github.com/nikolaposa
+
+## Copyright and license
+
+Copyright 2016 Nikola Poša. Released under MIT License - see the `LICENSE` file for details.
