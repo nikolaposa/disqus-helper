@@ -74,6 +74,4 @@ final class CommentsCount extends BaseWidget
 
         return $html;
     }
-
-
 }

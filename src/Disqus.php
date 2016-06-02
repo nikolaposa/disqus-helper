@@ -11,7 +11,6 @@
 namespace DisqusHelper;
 
 use DisqusHelper\Widget\WidgetInterface as Widget;
-use DisqusHelper\Exception;
 
 /**
  * @author Nikola Posa <posa.nikola@gmail.com>
