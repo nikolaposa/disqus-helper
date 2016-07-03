@@ -15,7 +15,7 @@ namespace DisqusHelper\Widget;
  *
  * @author Nikola Posa <posa.nikola@gmail.com>
  */
-final class Thread implements WidgetInterface
+final class ThreadWidget implements WidgetInterface
 {
     const SCRIPT_NAME = 'embed.js';
 

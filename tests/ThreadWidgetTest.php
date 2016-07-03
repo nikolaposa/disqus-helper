@@ -10,12 +10,13 @@
 
 namespace DisqusHelper\Tests;
 
-use DisqusHelper\Widget\Thread as ThreadWidget;
+use PHPUnit_Framework_TestCase;
+use DisqusHelper\Widget\ThreadWidget;
 
 /**
  * @author Nikola Posa <posa.nikola@gmail.com>
  */
-class ThreadWidgetTest extends \PHPUnit_Framework_TestCase
+class ThreadWidgetTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var ThreadWidget

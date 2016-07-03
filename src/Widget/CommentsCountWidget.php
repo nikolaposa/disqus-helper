@@ -17,7 +17,7 @@ use DisqusHelper\Exception\RuntimeException;
  *
  * @author Nikola Posa <posa.nikola@gmail.com>
  */
-final class CommentsCount extends BaseWidget
+final class CommentsCountWidget extends BaseWidget
 {
     const SCRIPT_NAME = 'count.js';
 

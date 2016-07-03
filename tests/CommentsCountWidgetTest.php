@@ -10,12 +10,13 @@
 
 namespace DisqusHelper\Tests;
 
-use DisqusHelper\Widget\CommentsCount as CommentsCountWidget;
+use PHPUnit_Framework_TestCase;
+use DisqusHelper\Widget\CommentsCountWidget;
 
 /**
  * @author Nikola Posa <posa.nikola@gmail.com>
  */
-class CommentsCountWidgetTest extends \PHPUnit_Framework_TestCase
+class CommentsCountWidgetTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var CommentsCountWidget

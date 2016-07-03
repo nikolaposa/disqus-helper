@@ -174,7 +174,7 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
         $html .= ' ' . $disqus();
 
         $this->assertContains('<script', $html);
-        $this->assertContains(\DisqusHelper\Widget\Thread::SCRIPT_NAME, $html);
+        $this->assertContains(\DisqusHelper\Widget\ThreadWidget::SCRIPT_NAME, $html);
         $this->assertContains('</script>', $html);
     }
 
@@ -191,7 +191,7 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
         $html .= ' ' . $disqus();
 
         $this->assertContains('<script', $html);
-        $this->assertEquals(1, substr_count($html, \DisqusHelper\Widget\Thread::SCRIPT_NAME), 'Widget script rendered multiple times');
+        $this->assertEquals(1, substr_count($html, \DisqusHelper\Widget\ThreadWidget::SCRIPT_NAME), 'Widget script rendered multiple times');
         $this->assertContains('</script>', $html);
     }
 

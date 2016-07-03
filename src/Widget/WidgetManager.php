@@ -39,8 +39,8 @@ class WidgetManager implements WidgetLocatorInterface
     public static function createWithDefaultWidgets() : self
     {
         return self::create([
-            'thread' => Thread::class,
-            'commentscount' => CommentsCount::class,
+            'thread' => ThreadWidget::class,
+            'commentscount' => CommentsCountWidget::class,
         ]);
     }
 
