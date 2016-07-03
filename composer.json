@@ -16,12 +16,18 @@
             "homepage": "http://www.nikolaposa.in.rs"
         }
     ],
+    "config": {
+        "platform": {
+            "php": "7.0.8"
+        }
+    },
     "require": {
-        "php": "~7.0"
+        "php": "~7.0",
+        "container-interop/container-interop": "^1.0"
     },
     "require-dev": {
-        "fabpot/php-cs-fixer": "^1.11",
-        "phpunit/phpunit": "^5.0"
+        "phpunit/phpunit": "^5.0",
+        "friendsofphp/php-cs-fixer": "^1.11"
     },
     "autoload": {
         "psr-4": { "DisqusHelper\\": "src/" }
