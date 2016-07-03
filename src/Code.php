@@ -61,6 +61,11 @@ final class Code
         return $this;
     }
 
+    public function hasScriptFile(string $fileName) : bool
+    {
+        return isset($this->scriptFiles[$fileName]);
+    }
+
     public function __toString() : string
     {
         return $this->toHtml();

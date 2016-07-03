@@ -12,6 +12,8 @@ namespace DisqusHelper\Tests;
 
 use PHPUnit_Framework_TestCase;
 use DisqusHelper\Widget\CommentsCountWidget;
+use DisqusHelper\Exception\RuntimeException;
+use DisqusHelper\Code;
 
 /**
  * @author Nikola Posa <posa.nikola@gmail.com>
@@ -44,11 +46,10 @@ class CommentsCountWidgetTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * @expectedException \DisqusHelper\Exception\RuntimeException
-     */
     public function testLinkRenderingFailsIfUrlIsMissing()
     {
+        $this->expectException(RuntimeException::class);
+
         $this->widget->render(['label' => 'Test']);
     }
 
@@ -93,5 +94,14 @@ class CommentsCountWidgetTest extends PHPUnit_Framework_TestCase
             'url' => 'http://example.com/article1.html',
             'identifier' => 'article1'
         ]);
+    }
+
+    public function testVisitingCodeAddsJsFile()
+    {
+        $code = Code::create();
+
+        $code = $this->widget->visit($code);
+
+        $this->assertTrue($code->hasScriptFile(CommentsCountWidget::SCRIPT_NAME));
     }
 }

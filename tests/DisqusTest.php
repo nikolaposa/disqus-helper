@@ -10,16 +10,16 @@
 
 namespace DisqusHelper\Tests;
 
+use PHPUnit_Framework_TestCase;
 use DisqusHelper\Disqus;
 use DisqusHelper\Exception\InvalidArgumentException;
-use DisqusHelper\Exception\RuntimeException;
 use DisqusHelper\Exception\WidgetNotFoundException;
 use DisqusHelper\Widget\ThreadWidget;
 
 /**
  * @author Nikola Posa <posa.nikola@gmail.com>
  */
-class DisqusTest extends \PHPUnit_Framework_TestCase
+class DisqusTest extends PHPUnit_Framework_TestCase
 {
     public function testGettingShortName()
     {

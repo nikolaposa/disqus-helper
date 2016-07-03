@@ -12,6 +12,7 @@ namespace DisqusHelper\Tests;
 
 use PHPUnit_Framework_TestCase;
 use DisqusHelper\Widget\ThreadWidget;
+use DisqusHelper\Code;
 
 /**
  * @author Nikola Posa <posa.nikola@gmail.com>
@@ -33,5 +34,14 @@ class ThreadWidgetTest extends PHPUnit_Framework_TestCase
         $html = $this->widget->render();
 
         $this->assertContains('disqus_thread', $html);
+    }
+
+    public function testVisitingCodeAddsJsFile()
+    {
+        $code = Code::create();
+
+        $code = $this->widget->visit($code);
+
+        $this->assertTrue($code->hasScriptFile(ThreadWidget::SCRIPT_NAME));
     }
 }
