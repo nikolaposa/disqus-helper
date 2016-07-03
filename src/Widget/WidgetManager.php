@@ -30,7 +30,7 @@ class WidgetManager implements WidgetLocatorInterface
         $widgetManager = new self();
 
         foreach ($widgets as $widgetId => $widget) {
-            $widgetManager->setWidget($widgetId, $widget);
+            $widgetManager->registerWidget($widgetId, $widget);
         }
 
         return $widgetManager;
@@ -44,20 +44,28 @@ class WidgetManager implements WidgetLocatorInterface
         ]);
     }
 
-    public function setWidget(string $widgetId, $widget)
+    public function registerWidget(string $widgetId, $widget)
     {
         if (!($widget instanceof WidgetInterface || is_string($widget) || is_callable($widget))) {
             throw InvalidWidgetConfigurationException::forConfiguration($widgetId, $widget);
         }
 
+        $widgetId = strtolower($widgetId);
+
         $this->widgets[$widgetId] = $widget;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    public function has(string $widgetId) : bool
+    {
+        $widgetId = strtolower($widgetId);
+
+        return isset($this->widgets[$widgetId]);
+    }
+
     public function get(string $widgetId) : WidgetInterface
     {
+        $widgetId = strtolower($widgetId);
+
         if (!isset($this->widgets[$widgetId])) {
             throw WidgetNotFoundException::forWidgetId($widgetId);
         }
@@ -71,7 +79,7 @@ class WidgetManager implements WidgetLocatorInterface
         return $widget;
     }
 
-    protected function createWidget($widgetId) : WidgetInterface
+    protected function createWidget($widgetId)
     {
         $widget = $this->widgets[$widgetId];
 

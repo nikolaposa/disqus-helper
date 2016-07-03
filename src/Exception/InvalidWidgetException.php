@@ -15,12 +15,11 @@ use DisqusHelper\Widget\WidgetInterface;
 
 class InvalidWidgetException extends RuntimeException implements ExceptionInterface
 {
-    public static function forWidget(object $widget) : self
+    public static function forWidget($widget) : self
     {
         return new self(sprintf(
-            "Widget should be %s instance; %s given",
-            WidgetInterface::class,
-            get_class($widget)
+            "Widget must implement %s interface",
+            WidgetInterface::class
         ));
     }
 }
