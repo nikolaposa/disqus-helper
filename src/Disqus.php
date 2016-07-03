@@ -19,6 +19,11 @@ use DisqusHelper\Widget\WidgetManager;
 final class Disqus
 {
     /**
+     * @var string
+     */
+    private $shortName;
+
+    /**
      * @var array
      */
     private $config;
@@ -56,7 +61,9 @@ final class Disqus
     ) {
         $disqusHelper = new self();
 
-        $disqusHelper->config = array_merge(['shortname' => $shortName], $config);
+        $disqusHelper->shortName = $shortName;
+
+        $disqusHelper->config = $config;
 
         if (is_null($widgetLocator)) {
             $widgetLocator = WidgetManager::createWithDefaultWidgets();
@@ -66,11 +73,13 @@ final class Disqus
 
         return $disqusHelper;
     }
+    
+    public function getShortName() : string
+    {
+        return $this->shortName;
+    }
 
-    /**
-     * @return array
-     */
-    public function getConfig()
+    public function getConfig() : array
     {
         return $this->config;
     }
@@ -130,7 +139,7 @@ final class Disqus
             throw new Exception\RuntimeException(get_class($this) . ' widget has already been initialized');
         }
 
-        $config = array_merge($this->config, $config);
+        $config = array_merge($this->config, $config, ['shortname' => $this->shortName]);
 
         $html = '<script type="text/javascript">';
         $indent = '    ';

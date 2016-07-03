@@ -20,46 +20,22 @@ use DisqusHelper\Exception\WidgetNotFoundException;
  */
 class DisqusTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Disqus
-     */
-    private $disqus;
-
-    protected function setUp()
+    public function testGettingShortName()
     {
-        $this->disqus = Disqus::create('foobar');
+        $disqus = Disqus::create('test');
+
+        $this->assertEquals('test', $disqus->getShortName());
     }
 
-    public function testConfigRetrieval()
+    public function testGettingConfig()
     {
-        $disqus = Disqus::create('foobar', ['title' => 'test']);
-
-        $config = $disqus->getConfig();
-
-        $this->assertInternalType('array', $config);
-        $this->assertNotEmpty($config);
-    }
-
-    public function testShortnameIsPresentInConfig()
-    {
-        $disqus = Disqus::create('foobar');
-
-        $config = $disqus->getConfig();
-
-        $this->assertArrayHasKey('shortname', $config);
-        $this->assertEquals('foobar', $config['shortname']);
-    }
-
-    public function testConfigIsProperlySet()
-    {
-        $disqus = Disqus::create('blog', [
+        $disqus = Disqus::create('test', [
             'title' => 'My article',
             'identifier' => 'article1'
         ]);
 
         $config = $disqus->getConfig();
 
-        $this->assertEquals('blog', $config['shortname']);
         $this->assertEquals('My article', $config['title']);
         $this->assertEquals('article1', $config['identifier']);
     }
