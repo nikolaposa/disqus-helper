@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the ZfDisqus package.
+ * This file is part of the Disqus Helper package.
  *
  * Copyright (c) Nikola Posa <posa.nikola@gmail.com>
  *
