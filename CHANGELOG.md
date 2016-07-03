@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 ### Backwards-incompatible changes
 - PHP 7 is now required to use Disqus Helper
 - `Disqus` instance can now only be created using `create()` named constructor
+- `Disqus` configuration can only be supplied through the new `configure()` method
 - `Disqus::__invoke()` replaced by `getCode()` and `__toString()` methods
 
 ## 1.2.x
