@@ -22,7 +22,7 @@ composer require nikolaposa/disqus-helper
 ```php
 use DisqusHelper\Disqus;
 
-$disqus = new Disqus('disqus_shortname');
+$disqus = Disqus::create('disqus_shortname');
 
 ```
 
@@ -52,7 +52,7 @@ $disqus = new Disqus('disqus_shortname');
         </div>
 
         <!-- MUST be called at the end, usually before closing </body> tag -->
-        <?php echo $disqus(); ?>
+        <?php echo $disqus->getCode(); ?>
     </body>
 </html>
 ```
