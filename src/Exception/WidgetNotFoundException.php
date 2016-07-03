@@ -8,15 +8,12 @@
  * located at the package root folder.
  */
 
-require __DIR__ . '/../vendor/autoload.php';
+namespace DisqusHelper\Exception;
 
-use DisqusHelper\Disqus;
-
-$disqus = Disqus::create('blog');
-
-echo $disqus->thread([], [
-    'title' => 'My article',
-    'identifier' => 'article1'
-]) . "\n\n";
-
-echo $disqus->getCode();
+class WidgetNotFoundException extends RuntimeException
+{
+    public static function forWidgetId(string $widgetId) : self
+    {
+        return new self(sprintf("Unable to find '%s' widget", $widgetId));
+    }
+}

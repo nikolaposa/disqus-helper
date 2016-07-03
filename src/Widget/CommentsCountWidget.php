@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the ZfDisqus package.
+ * This file is part of the Disqus Helper package.
  *
  * Copyright (c) Nikola Posa <posa.nikola@gmail.com>
  *
@@ -10,6 +10,7 @@
 
 namespace DisqusHelper\Widget;
 
+use DisqusHelper\Code;
 use DisqusHelper\Exception\RuntimeException;
 
 /**
@@ -17,38 +18,31 @@ use DisqusHelper\Exception\RuntimeException;
  *
  * @author Nikola Posa <posa.nikola@gmail.com>
  */
-final class CommentsCount extends BaseWidget
+final class CommentsCountWidget extends BaseWidget
 {
     const SCRIPT_NAME = 'count.js';
 
     /**
      * @var array
      */
-    private static $defaultOptions = array(
+    private static $defaultOptions = [
         'url' => null,
         'label' => null,
         'as_link' => true,
         'identifier' => null,
-    );
+    ];
 
-    public function getScriptName()
-    {
-        return self::SCRIPT_NAME;
-    }
-
-    public function render(array $options = array())
+    public function render(array $options = []) : string
     {
         $options = array_merge(self::$defaultOptions, $options);
 
         $label = htmlspecialchars((string) $options['label'], ENT_QUOTES, 'UTF-8');
 
-        $attribs = array();
+        $attribs = [];
 
         if (isset($options['identifier'])) {
             $attribs['data-disqus-identifier'] = $options['identifier'];
         }
-
-        $html = '';
 
         if ($options['as_link']) {
             if (empty($options['url'])) {
@@ -57,21 +51,28 @@ final class CommentsCount extends BaseWidget
 
             $url = $options['url'] . '#disqus_thread';
 
-            $html = '<a href="' . $url . '"'
-                . ' ' . $this->htmlAttribs($attribs) . '>'
+            return '<a href="' . $url . '"'
+                . ' ' . $this->htmlAttribsToString($attribs) . '>'
                 . $label
                 . '</a>';
-        } else {
-            if (!empty($options['url'])) {
-                $attribs['data-disqus-url'] = $options['url'];
-            }
-
-            $html = '<span class="disqus-comment-count" data-disqus-identifier="article_1_identifier"'
-                . ' ' . $this->htmlAttribs($attribs) . '>'
-                . $label
-                . '</span>';
         }
 
+        if (!empty($options['url'])) {
+            $attribs['data-disqus-url'] = $options['url'];
+        }
+
+        return '<span class="disqus-comment-count" data-disqus-identifier="article_1_identifier"'
+            . ' ' . $this->htmlAttribsToString($attribs) . '>'
+            . $label
+            . '</span>';
+
         return $html;
+    }
+
+    public function visit(Code $code) : Code
+    {
+        $code->addScriptFile(self::SCRIPT_NAME);
+
+        return $code;
     }
 }

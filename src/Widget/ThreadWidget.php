@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the ZfDisqus package.
+ * This file is part of the Disqus Helper package.
  *
  * Copyright (c) Nikola Posa <posa.nikola@gmail.com>
  *
@@ -9,23 +9,26 @@
  */
 
 namespace DisqusHelper\Widget;
+use DisqusHelper\Code;
 
 /**
  * Comments thread widget.
  *
  * @author Nikola Posa <posa.nikola@gmail.com>
  */
-final class Thread implements WidgetInterface
+final class ThreadWidget implements WidgetInterface
 {
     const SCRIPT_NAME = 'embed.js';
 
-    public function getScriptName()
-    {
-        return self::SCRIPT_NAME;
-    }
-
-    public function render(array $options = array())
+    public function render(array $options = []) : string
     {
         return '<div id="disqus_thread"></div>';
+    }
+
+    public function visit(Code $code) : Code
+    {
+        $code->addScriptFile(self::SCRIPT_NAME);
+
+        return $code;
     }
 }

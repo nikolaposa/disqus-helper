@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the DisqusHelper package.
+ * This file is part of the Disqus Helper package.
  *
  * Copyright (c) Nikola Posa <posa.nikola@gmail.com>
  *
@@ -13,6 +13,6 @@ namespace DisqusHelper\Exception;
 /**
  * @author Nikola Posa <posa.nikola@gmail.com>
  */
-class RuntimeException extends \RuntimeException implements Exception
+class RuntimeException extends \RuntimeException implements ExceptionInterface
 {
 }

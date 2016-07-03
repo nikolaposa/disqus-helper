@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the DisqusHelper package.
+ * This file is part of the Disqus Helper package.
  *
  * Copyright (c) Nikola Posa <posa.nikola@gmail.com>
  *
@@ -10,202 +10,124 @@
 
 namespace DisqusHelper\Tests;
 
+use PHPUnit_Framework_TestCase;
 use DisqusHelper\Disqus;
+use DisqusHelper\Exception\InvalidArgumentException;
+use DisqusHelper\Exception\WidgetNotFoundException;
+use DisqusHelper\Widget\ThreadWidget;
 
 /**
  * @author Nikola Posa <posa.nikola@gmail.com>
  */
-class DisqusTest extends \PHPUnit_Framework_TestCase
+class DisqusTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Disqus
-     */
-    private $disqus;
-
-    protected function setUp()
+    public function testGettingShortName()
     {
-        $this->disqus = new Disqus('foobar');
+        $disqus = Disqus::create('test');
+
+        $this->assertEquals('test', $disqus->getShortName());
     }
 
-    public function testConfigRetrieval()
+    public function testGettingConfig()
     {
-        $disqus = new Disqus('foobar', array('title' => 'test'));
-
-        $config = $disqus->getConfig();
-
-        $this->assertInternalType('array', $config);
-        $this->assertNotEmpty($config);
-    }
-
-    public function testShortnameIsPresentInConfig()
-    {
-        $disqus = new Disqus('foobar');
-
-        $config = $disqus->getConfig();
-
-        $this->assertArrayHasKey('shortname', $config);
-        $this->assertEquals('foobar', $config['shortname']);
-    }
-
-    public function testConfigIsProperlySet()
-    {
-        $disqus = new Disqus('blog', array(
+        $disqus = Disqus::create('test', [
             'title' => 'My article',
             'identifier' => 'article1'
-        ));
+        ]);
 
         $config = $disqus->getConfig();
 
-        $this->assertEquals('blog', $config['shortname']);
         $this->assertEquals('My article', $config['title']);
         $this->assertEquals('article1', $config['identifier']);
     }
 
-    /**
-     * @expectedException \DisqusHelper\Exception\BadMethodCallException
-     */
     public function testCannotInvokeUndefinedWidget()
     {
-        $disqus = new Disqus('foobar');
+        $this->expectException(WidgetNotFoundException::class);
+
+        $disqus = Disqus::create('test');
         $disqus->undefined();
     }
 
     public function testWidgetRendering()
     {
-        $disqus = new Disqus('foobar');
+        $disqus = Disqus::create('test');
 
         $html = $disqus->thread();
         $this->assertInternalType('string', $html);
         $this->assertNotEmpty($html);
     }
 
-    /**
-     * @expectedException \DisqusHelper\Exception\InvalidArgumentException
-     */
     public function testWidgetInvokeOptionsValidation()
     {
-        $disqus = new Disqus('foobar');
+        $this->expectException(InvalidArgumentException::class);
 
-        $html = $disqus->thread('test');
+        $disqus = Disqus::create('test');
+
+        $disqus->thread('test');
     }
 
-    /**
-     * @expectedException \DisqusHelper\Exception\InvalidArgumentException
-     */
     public function testWidgetInvokeWithConfigValidation()
     {
-        $disqus = new Disqus('foobar');
+        $this->expectException(InvalidArgumentException::class);
 
-        $html = $disqus->thread(array(), 'test');
+        $disqus = Disqus::create('test');
+
+        $disqus->thread([], 'test');
     }
 
-    public function testConfigRenderedProperly()
+    public function testResultingCodeContainsConfigurationAndWidgetAssets()
     {
-        $disqus = new Disqus('blog', array(
+        $disqus = Disqus::create('test', [
             'title' => 'My article',
             'identifier' => 'article1'
-        ));
+        ]);
 
         $html = $disqus->thread();
 
-        $html .= ' ' . $disqus();
+        $html .= ' ' . $disqus->getCode();
 
         $this->assertContains('<script', $html);
         $this->assertContains('shortname', $html);
-        $this->assertContains('blog', $html);
+        $this->assertContains('test', $html);
         $this->assertContains('title', $html);
         $this->assertContains('My article', $html);
         $this->assertContains('identifier', $html);
         $this->assertContains('article1', $html);
+        $this->assertContains(ThreadWidget::SCRIPT_NAME, $html);
         $this->assertContains('</script>', $html);
     }
 
-    public function testConfigSuppliedOnInvokeRenderedProperly()
+    public function testWidgetAssetsDoNotRepeatInResultingCodeRegardlessOfNumberOfInvokations()
     {
-        $disqus = new Disqus('blog', array(
+        $disqus = Disqus::create('test', [
             'title' => 'My article',
             'identifier' => 'article1'
-        ));
-
-        $html = $disqus->thread();
-
-        $html .= ' ' . $disqus(array(
-            'title' => 'Article 2',
-            'identifier' => 'article2'
-        ));
-
-        $this->assertContains('<script', $html);
-        $this->assertContains('shortname', $html);
-        $this->assertContains('blog', $html);
-        $this->assertContains('title', $html);
-        $this->assertContains('Article 2', $html);
-        $this->assertContains('identifier', $html);
-        $this->assertContains('article2', $html);
-        $this->assertContains('</script>', $html);
-    }
-
-    public function testConfigSuppliedThroughWidgetInvokation()
-    {
-        $disqus = new Disqus('blog');
-
-        $html = $disqus->thread(array(), array(
-            'title' => 'Article 1',
-            'identifier' => 'article1'
-        ));
-
-        $html .= ' ' . $disqus();
-
-        $this->assertContains('<script', $html);
-        $this->assertContains('shortname', $html);
-        $this->assertContains('blog', $html);
-        $this->assertContains('title', $html);
-        $this->assertContains('Article 1', $html);
-        $this->assertContains('identifier', $html);
-        $this->assertContains('article1', $html);
-        $this->assertContains('</script>', $html);
-    }
-
-    public function testRenderingWidgetAssets()
-    {
-        $disqus = new Disqus('blog');
-
-        $html = $disqus->thread();
-
-        $html .= ' ' . $disqus();
-
-        $this->assertContains('<script', $html);
-        $this->assertContains(\DisqusHelper\Widget\Thread::SCRIPT_NAME, $html);
-        $this->assertContains('</script>', $html);
-    }
-
-    public function testRenderingWidgetAssetsOnlyOnceRegardlessOfNumberOfWidgetInvokations()
-    {
-        $disqus = new Disqus('blog', array(
-            'title' => 'My article',
-            'identifier' => 'article1'
-        ));
+        ]);
 
         $html = $disqus->thread();
         $html .= ' ' . $disqus->thread();
 
-        $html .= ' ' . $disqus();
+        $html .= ' ' . $disqus->getCode();
 
         $this->assertContains('<script', $html);
-        $this->assertEquals(1, substr_count($html, \DisqusHelper\Widget\Thread::SCRIPT_NAME), 'Widget script rendered multiple times');
+        $this->assertEquals(1, substr_count($html, ThreadWidget::SCRIPT_NAME), 'Widget script rendered multiple times');
         $this->assertContains('</script>', $html);
     }
 
-    /**
-     * @expectedException \DisqusHelper\Exception\RuntimeException
-     */
-    public function testInitFailsIfCalledMoreThanOnce()
+    public function testGetCodeInvokedWhenCastingToString()
     {
-        $disqus = new Disqus('foobar');
+        $disqus = Disqus::create('test', [
+            'title' => 'My article',
+        ]);
 
-        $disqus->thread();
+        $html = (string) $disqus;
 
-        $disqus();
-
-        $disqus();
+        $this->assertContains('<script', $html);
+        $this->assertContains('shortname', $html);
+        $this->assertContains('test', $html);
+        $this->assertContains('title', $html);
+        $this->assertContains('My article', $html);
+        $this->assertContains('</script>', $html);
     }
 }

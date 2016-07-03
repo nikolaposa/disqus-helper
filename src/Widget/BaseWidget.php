@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the ZfDisqus package.
+ * This file is part of the Disqus Helper package.
  *
  * Copyright (c) Nikola Posa <posa.nikola@gmail.com>
  *
@@ -15,11 +15,7 @@ namespace DisqusHelper\Widget;
  */
 abstract class BaseWidget implements WidgetInterface
 {
-    /**
-     * @param array $attribs
-     * @return string
-     */
-    protected function htmlAttribs(array $attribs)
+    protected function htmlAttribsToString(array $attribs) : string
     {
         $html = '';
 
