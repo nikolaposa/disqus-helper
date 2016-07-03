@@ -45,6 +45,15 @@ final class Code
         return $this;
     }
 
+    public function getConfigVariable(string $key)
+    {
+        if (!isset($this->config[$key])) {
+            return null;
+        }
+
+        return $this->config[$key];
+    }
+
     public function mergeConfig(array $config) : Code
     {
         $this->config = array_merge($this->config, $config);
