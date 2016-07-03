@@ -111,7 +111,7 @@ final class Disqus
             $this->code->mergeConfig($config);
         }
 
-        $this->code->addJsFile($widget->getScriptName());
+        $widget->visit($this->code);
 
         return $widget->render($options ?: []);
     }

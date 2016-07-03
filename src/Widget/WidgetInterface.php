@@ -10,19 +10,24 @@
 
 namespace DisqusHelper\Widget;
 
+use DisqusHelper\Code;
+
 /**
  * @author Nikola Posa <posa.nikola@gmail.com>
  */
 interface WidgetInterface
 {
     /**
+     * @param array $options OPTIONAL
+     *
      * @return string
      */
-    public function getScriptName();
+    public function render(array $options = []) : string;
 
     /**
-     * @param array $options OPTIONAL
-     * @return string
+     * @param Code $code
+     *
+     * @return Code
      */
-    public function render(array $options = []);
+    public function visit(Code $code) : Code;
 }

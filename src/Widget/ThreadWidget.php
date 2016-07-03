@@ -9,6 +9,7 @@
  */
 
 namespace DisqusHelper\Widget;
+use DisqusHelper\Code;
 
 /**
  * Comments thread widget.
@@ -19,13 +20,15 @@ final class ThreadWidget implements WidgetInterface
 {
     const SCRIPT_NAME = 'embed.js';
 
-    public function getScriptName()
-    {
-        return self::SCRIPT_NAME;
-    }
-
-    public function render(array $options = [])
+    public function render(array $options = []) : string
     {
         return '<div id="disqus_thread"></div>';
+    }
+
+    public function visit(Code $code) : Code
+    {
+        $code->addScriptFile(self::SCRIPT_NAME);
+
+        return $code;
     }
 }

@@ -10,6 +10,7 @@
 
 namespace DisqusHelper\Widget;
 
+use DisqusHelper\Code;
 use DisqusHelper\Exception\RuntimeException;
 
 /**
@@ -31,12 +32,7 @@ final class CommentsCountWidget extends BaseWidget
         'identifier' => null,
     ];
 
-    public function getScriptName()
-    {
-        return self::SCRIPT_NAME;
-    }
-
-    public function render(array $options = [])
+    public function render(array $options = []) : string
     {
         $options = array_merge(self::$defaultOptions, $options);
 
@@ -48,8 +44,6 @@ final class CommentsCountWidget extends BaseWidget
             $attribs['data-disqus-identifier'] = $options['identifier'];
         }
 
-        $html = '';
-
         if ($options['as_link']) {
             if (empty($options['url'])) {
                 throw new RuntimeException("URL option is missing for the Comments count widget");
@@ -57,21 +51,28 @@ final class CommentsCountWidget extends BaseWidget
 
             $url = $options['url'] . '#disqus_thread';
 
-            $html = '<a href="' . $url . '"'
-                . ' ' . $this->htmlAttribs($attribs) . '>'
+            return '<a href="' . $url . '"'
+                . ' ' . $this->htmlAttribsToString($attribs) . '>'
                 . $label
                 . '</a>';
-        } else {
-            if (!empty($options['url'])) {
-                $attribs['data-disqus-url'] = $options['url'];
-            }
-
-            $html = '<span class="disqus-comment-count" data-disqus-identifier="article_1_identifier"'
-                . ' ' . $this->htmlAttribs($attribs) . '>'
-                . $label
-                . '</span>';
         }
 
+        if (!empty($options['url'])) {
+            $attribs['data-disqus-url'] = $options['url'];
+        }
+
+        return '<span class="disqus-comment-count" data-disqus-identifier="article_1_identifier"'
+            . ' ' . $this->htmlAttribsToString($attribs) . '>'
+            . $label
+            . '</span>';
+
         return $html;
+    }
+
+    public function visit(Code $code) : Code
+    {
+        $code->addScriptFile(self::SCRIPT_NAME);
+
+        return $code;
     }
 }

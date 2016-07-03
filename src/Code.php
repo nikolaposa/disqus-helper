@@ -22,7 +22,7 @@ final class Code
     /**
      * @var array
      */
-    private $jsFiles = [];
+    private $scriptFiles = [];
 
     /**
      * @var string
@@ -52,10 +52,10 @@ final class Code
         return $this;
     }
 
-    public function addJsFile(string $jsFile) : Code
+    public function addScriptFile(string $fileName) : Code
     {
-        if (!isset($this->jsFiles[$jsFile])) {
-            $this->jsFiles[$jsFile] = $jsFile;
+        if (!isset($this->scriptFiles[$fileName])) {
+            $this->scriptFiles[$fileName] = $fileName;
         }
 
         return $this;
@@ -102,12 +102,12 @@ final class Code
 
     private function renderJsFiles()
     {
-        foreach ($this->jsFiles as $jsFile) {
+        foreach ($this->scriptFiles as $fileName) {
             $this->html .= self::INDENT . '(function() {' . PHP_EOL;
             $this->html .= self::INDENT . self::INDENT . 'var s = document.createElement("script");' . PHP_EOL;
             $this->html .= self::INDENT . self::INDENT . 's.type = "text/javascript";' . PHP_EOL;
             $this->html .= self::INDENT . self::INDENT . 's.async = true;' . PHP_EOL;
-            $this->html .= self::INDENT . self::INDENT . 's.src = "//" + disqus_shortname + ".disqus.com/' . $jsFile . '";' . PHP_EOL;
+            $this->html .= self::INDENT . self::INDENT . 's.src = "//" + disqus_shortname + ".disqus.com/' . $fileName . '";' . PHP_EOL;
             $this->html .= self::INDENT . self::INDENT . '(document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(s);' . PHP_EOL;
             $this->html .= self::INDENT . '})();' . PHP_EOL . PHP_EOL;
         }

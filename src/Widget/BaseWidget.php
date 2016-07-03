@@ -15,11 +15,7 @@ namespace DisqusHelper\Widget;
  */
 abstract class BaseWidget implements WidgetInterface
 {
-    /**
-     * @param array $attribs
-     * @return string
-     */
-    protected function htmlAttribs(array $attribs)
+    protected function htmlAttribsToString(array $attribs) : string
     {
         $html = '';
 
