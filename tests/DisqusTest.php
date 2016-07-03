@@ -11,6 +11,9 @@
 namespace DisqusHelper\Tests;
 
 use DisqusHelper\Disqus;
+use DisqusHelper\Exception\InvalidArgumentException;
+use DisqusHelper\Exception\RuntimeException;
+use DisqusHelper\Exception\WidgetNotFoundException;
 
 /**
  * @author Nikola Posa <posa.nikola@gmail.com>
@@ -61,11 +64,10 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('article1', $config['identifier']);
     }
 
-    /**
-     * @expectedException \DisqusHelper\Exception\BadMethodCallException
-     */
     public function testCannotInvokeUndefinedWidget()
     {
+        $this->expectException(WidgetNotFoundException::class);
+
         $disqus = new Disqus('foobar');
         $disqus->undefined();
     }
@@ -79,24 +81,22 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEmpty($html);
     }
 
-    /**
-     * @expectedException \DisqusHelper\Exception\InvalidArgumentException
-     */
     public function testWidgetInvokeOptionsValidation()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $disqus = new Disqus('foobar');
 
-        $html = $disqus->thread('test');
+        $disqus->thread('test');
     }
 
-    /**
-     * @expectedException \DisqusHelper\Exception\InvalidArgumentException
-     */
     public function testWidgetInvokeWithConfigValidation()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $disqus = new Disqus('foobar');
 
-        $html = $disqus->thread([], 'test');
+        $disqus->thread([], 'test');
     }
 
     public function testConfigRenderedProperly()
@@ -195,11 +195,10 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('</script>', $html);
     }
 
-    /**
-     * @expectedException \DisqusHelper\Exception\RuntimeException
-     */
     public function testInitFailsIfCalledMoreThanOnce()
     {
+        $this->expectException(RuntimeException::class);
+
         $disqus = new Disqus('foobar');
 
         $disqus->thread();

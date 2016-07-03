@@ -13,6 +13,6 @@ namespace DisqusHelper\Exception;
 /**
  * @author Nikola Posa <posa.nikola@gmail.com>
  */
-class BadMethodCallException extends \BadMethodCallException implements ExceptionInterface
+interface ExceptionInterface
 {
 }

@@ -10,9 +10,12 @@
 
 namespace DisqusHelper\Exception;
 
-/**
- * @author Nikola Posa <posa.nikola@gmail.com>
- */
-interface Exception
+use RuntimeException;
+
+class WidgetNotFoundException extends RuntimeException implements ExceptionInterface
 {
+    public static function forWidgetId(string $widgetId) : self
+    {
+        return new self(sprintf("Unable to find '%s' widget", $widgetId));
+    }
 }

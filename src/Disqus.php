@@ -10,7 +10,8 @@
 
 namespace DisqusHelper;
 
-use DisqusHelper\Widget\WidgetInterface as Widget;
+use DisqusHelper\Widget\WidgetLocatorInterface;
+use DisqusHelper\Widget\WidgetManager;
 
 /**
  * @author Nikola Posa <posa.nikola@gmail.com>
@@ -23,12 +24,9 @@ final class Disqus
     private $config;
 
     /**
-     * @var array
+     * @var WidgetLocatorInterface
      */
-    private $widgets = [
-        'thread' => 'DisqusHelper\\Widget\\Thread',
-        'commentscount' => 'DisqusHelper\\Widget\\CommentsCount'
-    ];
+    private $widgetLocator;
 
     /**
      * @var array
@@ -43,12 +41,19 @@ final class Disqus
     /**
      * @param string $shortName Unique identifier of some Disqus website.
      * @param array $config OPTIONAL Any additional Disqus configuration.
+     * @param WidgetLocatorInterface $widgetLocator OPTIONAL
      * @link https://help.disqus.com/customer/portal/articles/472098-javascript-configuration-variables
      */
-    public function __construct($shortName, array $config = [])
+    public function __construct(string $shortName, array $config = [], WidgetLocatorInterface $widgetLocator = null)
     {
         $config = array_merge(['shortname' => $shortName], $config);
         $this->config = $config;
+
+        if (is_null($widgetLocator)) {
+            $widgetLocator = WidgetManager::createWithDefaultWidgets();
+        }
+
+        $this->widgetLocator = $widgetLocator;
     }
 
     /**
@@ -60,45 +65,21 @@ final class Disqus
     }
 
     /**
-     * @param string $name
-     * @return Widget|null
-     */
-    private function getWidget($name)
-    {
-        $name = strtolower($name);
-
-        if (isset($this->widgets[$name])) {
-            $widget = $this->widgets[$name];
-
-            if (!$widget instanceof Widget) {
-                $this->widgets[$name] = $widget = new $widget();
-            }
-
-            return $widget;
-        }
-
-        return null;
-    }
-
-    /**
      * Overload method access; proxies calls to appropriate Disqus widget
      * and returns HTML output.
      *
      * @param  string $method
      * @param  array  $args
-     * @throws Exception\BadMethodCallException
+     *
      * @throws Exception\InvalidArgumentException
+     *
      * @return string
      */
     public function __call($method, $args)
     {
-        $widgetName = $method;
+        $widgetId = $method;
 
-        $widget = $this->getWidget($widgetName);
-
-        if ($widget === null) {
-            throw new Exception\BadMethodCallException("'$method' widget does not exist");
-        }
+        $widget = $this->widgetLocator->get($widgetId);
 
         if (($options = array_shift($args)) !== null) {
             if (!is_array($options)) {
@@ -114,8 +95,8 @@ final class Disqus
             $this->config = array_merge($this->config, $config);
         }
 
-        if (!isset($this->usedWidgets[$widgetName])) {
-            $this->usedWidgets[$widgetName] = $widget;
+        if (!isset($this->usedWidgets[$widgetId])) {
+            $this->usedWidgets[$widgetId] = $widget;
         }
 
         return $widget->render($options ?: []);
@@ -127,8 +108,10 @@ final class Disqus
      * This method should be called after using and rendering widgets, usually before closing </body> tag.
      *
      * @param array $config OPTIONAL Disqus configuration (https://help.disqus.com/customer/portal/articles/472098-javascript-configuration-variables)
-     * @return string
+     *
      * @throws Exception\RuntimeException
+     *
+     * @return string
      */
     public function __invoke(array $config = [])
     {

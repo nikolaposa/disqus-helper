@@ -13,6 +13,6 @@ namespace DisqusHelper\Exception;
 /**
  * @author Nikola Posa <posa.nikola@gmail.com>
  */
-class RuntimeException extends \RuntimeException implements Exception
+class RuntimeException extends \RuntimeException implements ExceptionInterface
 {
 }
