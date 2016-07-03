@@ -17,7 +17,7 @@ class InvalidWidgetConfigurationException extends InvalidArgumentException
     public static function forConfiguration(string $widgetId, $widget) : self
     {
         return new self(sprintf(
-            "Invalid configuration for '%' widget; widget should be either string, callable or %s instance, %s given",
+            "Invalid configuration for '%s' widget; widget should be either string, callable or %s instance, %s given",
             $widgetId,
             WidgetInterface::class,
             gettype($widget)

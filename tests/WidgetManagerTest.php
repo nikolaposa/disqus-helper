@@ -14,6 +14,7 @@ use PHPUnit_Framework_TestCase;
 use DisqusHelper\Widget\WidgetManager;
 use DisqusHelper\Widget\ThreadWidget;
 use DisqusHelper\Widget\CommentsCountWidget;
+use DisqusHelper\Exception\InvalidWidgetConfigurationException;
 use DisqusHelper\Exception\WidgetNotFoundException;
 use DisqusHelper\Exception\InvalidWidgetException;
 use DisqusHelper\Widget\WidgetInterface;
@@ -84,6 +85,18 @@ class WidgetManagerTest extends PHPUnit_Framework_TestCase
         ]);
 
         $this->assertSame($threadWidget, $widgetManager->get('thread'));
+    }
+
+    public function testExceptionIsRaisedInCaseOfRegisteringInvalidWidgetConfiguration()
+    {
+        $this->expectException(InvalidWidgetConfigurationException::class);
+        $this->expectExceptionMessage(
+            "Invalid configuration for 'test' widget; widget should be either string, callable or " . WidgetInterface::class . " instance, integer given"
+        );
+
+        $widgetManager = WidgetManager::create([]);
+
+        $widgetManager->registerWidget('test', 123);
     }
 
     public function testExceptionIsRaisedInCaseOfGettingNonRegisteredWidget()
