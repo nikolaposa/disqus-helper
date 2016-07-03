@@ -25,7 +25,7 @@ class WidgetManager implements WidgetLocatorInterface
     {
     }
 
-    public static function create(array $widgets) : self
+    public static function create(array $widgets) : WidgetManager
     {
         $widgetManager = new self();
 
@@ -36,7 +36,7 @@ class WidgetManager implements WidgetLocatorInterface
         return $widgetManager;
     }
 
-    public static function createWithDefaultWidgets() : self
+    public static function createWithDefaultWidgets() : WidgetManager
     {
         return self::create([
             'thread' => ThreadWidget::class,

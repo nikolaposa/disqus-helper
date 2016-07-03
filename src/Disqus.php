@@ -34,14 +34,9 @@ final class Disqus
     private $widgetLocator;
 
     /**
-     * @var array
+     * @var Code
      */
-    private $usedWidgets = [];
-
-    /**
-     * @var bool
-     */
-    private $initialized = false;
+    private $code;
 
     public function __construct()
     {
@@ -58,7 +53,7 @@ final class Disqus
         string $shortName,
         array $config = [],
         WidgetLocatorInterface $widgetLocator = null
-    ) {
+    ) : Disqus {
         $disqusHelper = new self();
 
         $disqusHelper->shortName = $shortName;
@@ -70,6 +65,10 @@ final class Disqus
         }
 
         $disqusHelper->widgetLocator = $widgetLocator;
+
+        $disqusHelper->code = Code::create()
+            ->setConfigVariable('shortname', $shortName)
+            ->mergeConfig($config);
 
         return $disqusHelper;
     }
@@ -85,20 +84,17 @@ final class Disqus
     }
 
     /**
-     * Overload method access; proxies calls to appropriate Disqus widget
-     * and returns HTML output.
+     * Proxies calls to some Disqus widget and returns HTML output.
      *
-     * @param  string $method
-     * @param  array  $args
+     * @param string $widgetId
+     * @param array $args
      *
      * @throws Exception\InvalidArgumentException
      *
      * @return string
      */
-    public function __call($method, $args)
+    public function __call($widgetId, $args) : string
     {
-        $widgetId = $method;
-
         $widget = $this->widgetLocator->get($widgetId);
 
         if (($options = array_shift($args)) !== null) {
@@ -112,12 +108,10 @@ final class Disqus
                 throw new Exception\InvalidArgumentException("Disqus configuration argument should be array");
             }
 
-            $this->config = array_merge($this->config, $config);
+            $this->code->mergeConfig($config);
         }
 
-        if (!isset($this->usedWidgets[$widgetId])) {
-            $this->usedWidgets[$widgetId] = $widget;
-        }
+        $this->code->addJsFile($widget->getScriptName());
 
         return $widget->render($options ?: []);
     }
@@ -127,50 +121,11 @@ final class Disqus
      *
      * This method should be called after using and rendering widgets, usually before closing </body> tag.
      *
-     * @throws Exception\RuntimeException
-     *
      * @return string
      */
     public function getCode() : string
     {
-        if ($this->initialized) {
-            throw new Exception\RuntimeException(get_class($this) . ' widget has already been initialized');
-        }
-
-        $config = array_merge($this->config, ['shortname' => $this->shortName]);
-
-        $html = '<script type="text/javascript">';
-        $indent = '    ';
-
-        foreach ($config as $key => $value) {
-            $html .= PHP_EOL;
-
-            if (is_string($value)) {
-                $value = addslashes((string) $value);
-                $value = "'$value'";
-            }
-            $html .= $indent . "var disqus_$key = $value;";
-        }
-
-        $html .= PHP_EOL . PHP_EOL;
-
-        foreach ($this->usedWidgets as $widget) {
-            $html .= $indent . '(function() {' . PHP_EOL;
-            $html .= $indent . $indent . 'var s = document.createElement("script");' . PHP_EOL;
-            $html .= $indent . $indent . 's.type = "text/javascript";' . PHP_EOL;
-            $html .= $indent . $indent . 's.async = true;' . PHP_EOL;
-            $html .= $indent . $indent . 's.src = "//" + disqus_shortname + ".disqus.com/' . $widget->getScriptName() . '";' . PHP_EOL;
-            $html .= $indent . $indent . '(document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(s);' . PHP_EOL;
-            $html .= $indent . '})();' . PHP_EOL;
-
-            $html .= PHP_EOL;
-        }
-
-        $html .= '</script>';
-
-        $this->initialized = true;
-
-        return $html;
+        return $this->code->toHtml();
     }
 
     public function __toString() : string
