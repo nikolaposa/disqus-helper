@@ -27,11 +27,13 @@ abstract class BaseWidget implements WidgetInterface
             }
 
             if (strpos($val, '"') !== false) {
-                $html .= " $key='$val'";
+                $html .= "$key='$val' ";
             } else {
-                $html .= " $key=\"$val\"";
+                $html .= "$key=\"$val\" ";
             }
         }
+
+        $html = rtrim($html);
 
         return $html;
     }

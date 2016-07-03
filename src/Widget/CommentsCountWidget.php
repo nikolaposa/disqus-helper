@@ -61,7 +61,7 @@ final class CommentsCountWidget extends BaseWidget
             $attribs['data-disqus-url'] = $options['url'];
         }
 
-        return '<span class="disqus-comment-count" data-disqus-identifier="article_1_identifier"'
+        return '<span class="disqus-comment-count"'
             . ' ' . $this->htmlAttribsToString($attribs) . '>'
             . $label
             . '</span>';

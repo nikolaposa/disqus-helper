@@ -31,13 +31,21 @@ $disqus = Disqus::create('disqus_shortname');
 <html>
     <head>
         <title>Blog</title>
+
+        <?php
+            //Page-specific Disqus configuration
+            $disqus->configure([
+                'title' => 'My article',
+                'identifier' => 'article1'
+            ]);
+        ?>
     </head>
 
     <body>
         <article>
             <h1>My article</h1>
             <!-- Comments count widget -->
-            <?php echo $disqus->commentsCount(array('url' => 'http://example.com/article1.html')); ?>
+            <?php echo $disqus->commentsCount(['url' => 'http://example.com/article1.html']); ?>
 
             <p>My article text</p>
         </article>
@@ -45,10 +53,7 @@ $disqus = Disqus::create('disqus_shortname');
         <div>
             <h2>Comments:</h2>
             <!-- Thread widget -->
-            <?php echo $disqus->thread(array(), array(
-                'title' => 'My article',
-                'identifier' => 'article1'
-            )); ?>
+            <?php echo $disqus->thread(); ?>
         </div>
 
         <!-- MUST be called at the end, usually before closing </body> tag -->

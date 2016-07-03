@@ -24,11 +24,6 @@ final class Disqus
     private $shortName;
 
     /**
-     * @var array
-     */
-    private $config;
-
-    /**
      * @var WidgetLocatorInterface
      */
     private $widgetLocator;
@@ -44,21 +39,17 @@ final class Disqus
 
     /**
      * @param string $shortName Unique identifier of some Disqus website.
-     * @param array $config OPTIONAL Any additional Disqus configuration (https://help.disqus.com/customer/portal/articles/472098-javascript-configuration-variables).
      * @param WidgetLocatorInterface $widgetLocator OPTIONAL
      *
      * @return Disqus
      */
     public static function create(
         string $shortName,
-        array $config = [],
         WidgetLocatorInterface $widgetLocator = null
     ) : Disqus {
         $disqusHelper = new self();
 
         $disqusHelper->shortName = $shortName;
-
-        $disqusHelper->config = $config;
 
         if (is_null($widgetLocator)) {
             $widgetLocator = WidgetManager::createWithDefaultWidgets();
@@ -66,9 +57,7 @@ final class Disqus
 
         $disqusHelper->widgetLocator = $widgetLocator;
 
-        $disqusHelper->code = Code::create()
-            ->setConfigVariable('shortname', $shortName)
-            ->mergeConfig($config);
+        $disqusHelper->code = Code::create($shortName);
 
         return $disqusHelper;
     }
@@ -78,9 +67,9 @@ final class Disqus
         return $this->shortName;
     }
 
-    public function getConfig() : array
+    public function configure(array $config)
     {
-        return $this->config;
+        $this->code->mergeConfig($config);
     }
 
     /**
@@ -101,14 +90,6 @@ final class Disqus
             if (!is_array($options)) {
                 throw new Exception\InvalidArgumentException("Widget options argument should be array");
             }
-        }
-
-        if (($config = array_shift($args)) !== null) {
-            if (!is_array($config)) {
-                throw new Exception\InvalidArgumentException("Disqus configuration argument should be array");
-            }
-
-            $this->code->mergeConfig($config);
         }
 
         $widget->visit($this->code);

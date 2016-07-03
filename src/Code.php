@@ -15,6 +15,11 @@ final class Code
     const INDENT = '    ';
 
     /**
+     * @var string
+     */
+    private $shortName;
+
+    /**
      * @var array
      */
     private $config = [];
@@ -33,25 +38,13 @@ final class Code
     {
     }
 
-    public static function create() : Code
+    public static function create(string $shortName) : Code
     {
-        return new self();
-    }
+        $code = new self();
 
-    public function setConfigVariable(string $key, $value) : Code
-    {
-        $this->config[$key] = $value;
+        $code->shortName = $shortName;
 
-        return $this;
-    }
-
-    public function getConfigVariable(string $key)
-    {
-        if (!isset($this->config[$key])) {
-            return null;
-        }
-
-        return $this->config[$key];
+        return $code;
     }
 
     public function mergeConfig(array $config) : Code
@@ -59,6 +52,11 @@ final class Code
         $this->config = array_merge($this->config, $config);
 
         return $this;
+    }
+
+    public function getConfig() : array
+    {
+        return $this->config;
     }
 
     public function addScriptFile(string $fileName) : Code
@@ -84,16 +82,14 @@ final class Code
     {
         $this->html = '';
 
-        $this->html = '<script type="text/javascript">';
+        $this->html = '<script>';
         $this->html .= PHP_EOL;
 
         $this->renderConfigVariables();
-
-        $this->html .= PHP_EOL . PHP_EOL;
-
         $this->renderJsFiles();
 
-        $this->html .= PHP_EOL . PHP_EOL;
+        $this->html = rtrim($this->html, PHP_EOL);
+        $this->html .= PHP_EOL;
         $this->html .= '</script>';
 
         return $this->html;
@@ -101,31 +97,32 @@ final class Code
 
     private function renderConfigVariables()
     {
-        $configVars = [];
+        if (empty($this->config)) {
+            return;
+        }
+
+        $this->html .= self::INDENT . 'var disqus_config = function () {' . PHP_EOL;
 
         foreach ($this->config as $key => $value) {
             if (is_string($value)) {
-                $value = addslashes((string) $value);
+                $value = addslashes($value);
                 $value = "'$value'";
             }
-            $configVars[] = self::INDENT . "var disqus_$key = $value;";
+            $this->html .= self::INDENT . self::INDENT . "this.$key = $value;" . PHP_EOL;
         }
 
-        $this->html .= implode(PHP_EOL, $configVars);
+        $this->html .= self::INDENT . '};' . PHP_EOL . PHP_EOL;
     }
 
     private function renderJsFiles()
     {
         foreach ($this->scriptFiles as $fileName) {
             $this->html .= self::INDENT . '(function() {' . PHP_EOL;
-            $this->html .= self::INDENT . self::INDENT . 'var s = document.createElement("script");' . PHP_EOL;
-            $this->html .= self::INDENT . self::INDENT . 's.type = "text/javascript";' . PHP_EOL;
-            $this->html .= self::INDENT . self::INDENT . 's.async = true;' . PHP_EOL;
-            $this->html .= self::INDENT . self::INDENT . 's.src = "//" + disqus_shortname + ".disqus.com/' . $fileName . '";' . PHP_EOL;
-            $this->html .= self::INDENT . self::INDENT . '(document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(s);' . PHP_EOL;
+            $this->html .= self::INDENT . self::INDENT . 'var d = document, s = d.createElement("script");' . PHP_EOL;
+            $this->html .= self::INDENT . self::INDENT . 's.src = "//' . $this->shortName . '.disqus.com/' . $fileName . '";' . PHP_EOL;
+            $this->html .= self::INDENT . self::INDENT . 's.setAttribute("data-timestamp", +new Date());' . PHP_EOL;
+            $this->html .= self::INDENT . self::INDENT . '(d.head || d.body).appendChild(s);' . PHP_EOL;
             $this->html .= self::INDENT . '})();' . PHP_EOL . PHP_EOL;
         }
-
-        $this->html = rtrim($this->html, PHP_EOL);
     }
 }

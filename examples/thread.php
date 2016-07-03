@@ -14,9 +14,11 @@ use DisqusHelper\Disqus;
 
 $disqus = Disqus::create('blog');
 
-echo $disqus->thread([], [
+$disqus->configure([
     'title' => 'My article',
     'identifier' => 'article1'
-]) . "\n\n";
+]);
+
+echo $disqus->thread() . "\n\n";
 
 echo $disqus->getCode();

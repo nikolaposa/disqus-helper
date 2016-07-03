@@ -38,7 +38,7 @@ class ThreadWidgetTest extends PHPUnit_Framework_TestCase
 
     public function testVisitingCodeAddsJsFile()
     {
-        $code = Code::create();
+        $code = Code::create('test');
 
         $code = $this->widget->visit($code);
 

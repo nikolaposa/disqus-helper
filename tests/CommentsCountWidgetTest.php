@@ -30,18 +30,18 @@ class CommentsCountWidgetTest extends PHPUnit_Framework_TestCase
         $this->widget = new CommentsCountWidget();
     }
 
-    protected function assertHtmlTag($html, $tagName, $value = null, array $attributes = [])
+    public static function assertHtmlTag($html, $tagName, $value = null, array $attributes = [])
     {
-        $this->assertStringStartsWith("<$tagName", $html);
-        $this->assertStringEndsWith("</$tagName>", $html);
+        self::assertStringStartsWith("<$tagName", $html);
+        self::assertStringEndsWith("</$tagName>", $html);
 
         if ($value) {
-            $this->assertContains(">$value<", $html);
+            self::assertContains(">$value<", $html);
         }
 
         if (!empty($attributes)) {
             foreach ($attributes as $key => $val) {
-                $this->assertRegexp('|' . preg_quote($key) . '\s?=\s?"' . preg_quote($val, '|') . '"|', $html);
+                self::assertRegexp('|' . preg_quote($key) . '\s?=\s?"' . preg_quote($val, '|') . '"|', $html);
             }
         }
     }
@@ -98,7 +98,7 @@ class CommentsCountWidgetTest extends PHPUnit_Framework_TestCase
 
     public function testVisitingCodeAddsJsFile()
     {
-        $code = Code::create();
+        $code = Code::create('test');
 
         $code = $this->widget->visit($code);
 

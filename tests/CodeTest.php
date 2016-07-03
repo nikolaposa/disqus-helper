@@ -15,81 +15,76 @@ use DisqusHelper\Code;
 
 class CodeTest extends PHPUnit_Framework_TestCase
 {
-    public function testSettingSingleConfigVariable()
-    {
-        $code = Code::create()->setConfigVariable('foo', 'bar');
-
-        $this->assertEquals('bar', $code->getConfigVariable('foo'));
-    }
-
     public function testMergingConfig()
     {
-        $code = Code::create()
-            ->setConfigVariable('var1', 'test1')
-            ->setConfigVariable('var2', 'test2')
+        $code = Code::create('test')
+            ->mergeConfig(['var1' => 'test1', 'var2' => 'test2'])
             ->mergeConfig(['var1' => 'test']);
 
-        $this->assertEquals('test', $code->getConfigVariable('var1'));
+        $config = $code->getConfig();
+
+        $this->assertEquals('test', $config['var1']);
     }
 
     public function testAddingScriptFile()
     {
-        $code = Code::create()->addScriptFile('test.js');
+        $code = Code::create('test')->addScriptFile('test.js');
 
         $this->assertTrue($code->hasScriptFile('test.js'));
     }
 
-    public function testRenderingHtml()
+    public function testRenderingHtmlWithConfiguration()
     {
-        $code = Code::create()
+        $code = Code::create('test')
             ->mergeConfig([
-                'shortname' => 'test',
-                'title' => 'My article',
-                'identifier' => 'article1'
+                'page.identifier' => 'article1',
+                'page.category_id' => 7,
             ])
             ->addScriptFile('embed.js');
 
         $html = $code->toHtml();
 
-        $this->assertStringStartsWith('<script type="text/javascript">', $html);
-        $this->assertContains("var disqus_shortname = 'test';", $html);
-        $this->assertContains("var disqus_title = 'My article'", $html);
-        $this->assertContains("var disqus_identifier = 'article1'", $html);
-        $this->assertContains('var s = document.createElement("script");', $html);
-        $this->assertContains('s.type = "text/javascript"', $html);
-        $this->assertContains('s.async = true', $html);
-        $this->assertContains('s.src = "//" + disqus_shortname + ".disqus.com/embed.js"', $html);
-        $this->assertContains('(document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(s);', $html);
+        $this->assertStringStartsWith('<script>', $html);
+        $this->assertContains("var disqus_config = function () {", $html);
+        $this->assertContains("this.page.identifier = 'article1'", $html);
+        $this->assertContains("this.page.category_id = 7", $html);
+        $this->assertContains('var d = document, s = d.createElement("script");', $html);
+        $this->assertContains('s.src = "//test.disqus.com/embed.js"', $html);
+        $this->assertContains('(d.head || d.body).appendChild(s);', $html);
+        $this->assertStringEndsWith('</script>', $html);
+    }
+
+    public function testRenderingHtmlWithoutConfiguration()
+    {
+        $code = Code::create('test')
+            ->addScriptFile('count.js');
+
+        $html = $code->toHtml();
+
+        $this->assertStringStartsWith('<script>', $html);
+        $this->assertNotContains("var disqus_config = function () {", $html);
+        $this->assertContains('var d = document, s = d.createElement("script");', $html);
+        $this->assertContains('s.src = "//test.disqus.com/count.js"', $html);
+        $this->assertContains('(d.head || d.body).appendChild(s);', $html);
         $this->assertStringEndsWith('</script>', $html);
     }
 
     public function testToHtmlInvokedWhenCastingToString()
     {
-        $code = Code::create()
-            ->mergeConfig([
-                'shortname' => 'test',
-                'title' => 'My article',
-                'identifier' => 'article1'
-            ])
-            ->addScriptFile('embed.js');
+        $code = Code::create('test')->addScriptFile('embed.js');
 
         $html = (string) $code;
 
-        $this->assertStringStartsWith('<script type="text/javascript">', $html);
-        $this->assertContains("var disqus_shortname = 'test';", $html);
-        $this->assertContains("var disqus_title = 'My article'", $html);
-        $this->assertContains("var disqus_identifier = 'article1'", $html);
-        $this->assertContains('var s = document.createElement("script");', $html);
-        $this->assertContains('s.type = "text/javascript"', $html);
-        $this->assertContains('s.async = true', $html);
-        $this->assertContains('s.src = "//" + disqus_shortname + ".disqus.com/embed.js"', $html);
-        $this->assertContains('(document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(s);', $html);
+        $this->assertStringStartsWith('<script>', $html);
+        $this->assertContains('var d = document, s = d.createElement("script");', $html);
+        $this->assertContains('s.src = "//test.disqus.com/embed.js"', $html);
+        $this->assertContains('(d.head || d.body).appendChild(s);', $html);
         $this->assertStringEndsWith('</script>', $html);
     }
 
     public function testSameJsFilesRenderedOnlyOnce()
     {
-        $code = Code::create()
+        $code = Code::create('test')
             ->addScriptFile('embed.js')
             ->addScriptFile('embed.js')
             ->addScriptFile('embed.js');
