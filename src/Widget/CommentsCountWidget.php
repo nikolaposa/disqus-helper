@@ -49,24 +49,30 @@ final class CommentsCountWidget extends BaseWidget
                 throw new RuntimeException("URL option is missing for the Comments count widget");
             }
 
-            $url = $options['url'] . '#disqus_thread';
-
-            return '<a href="' . $url . '"'
-                . ' ' . $this->htmlAttribsToString($attribs) . '>'
-                . $label
-                . '</a>';
+            return $this->renderLink($options['url'] . '#disqus_thread', $label, $attribs);
         }
 
         if (!empty($options['url'])) {
             $attribs['data-disqus-url'] = $options['url'];
         }
 
+        return $this->renderElement($label, $attribs);
+    }
+
+    private function renderLink(string $href, string $label, array $attribs) : string
+    {
+        return '<a href="' . $href . '"'
+        . ' ' . $this->htmlAttribsToString($attribs) . '>'
+        . $label
+        . '</a>';
+    }
+
+    private function renderElement(string $label, array $attribs) : string
+    {
         return '<span class="disqus-comment-count"'
             . ' ' . $this->htmlAttribsToString($attribs) . '>'
             . $label
             . '</span>';
-
-        return $html;
     }
 
     public function visit(Code $code) : Code
