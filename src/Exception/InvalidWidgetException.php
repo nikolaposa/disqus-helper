@@ -10,10 +10,9 @@
 
 namespace DisqusHelper\Exception;
 
-use RuntimeException;
 use DisqusHelper\Widget\WidgetInterface;
 
-class InvalidWidgetException extends RuntimeException implements ExceptionInterface
+class InvalidWidgetException extends RuntimeException
 {
     public static function forWidget($widget) : self
     {

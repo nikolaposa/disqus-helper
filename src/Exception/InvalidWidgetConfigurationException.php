@@ -10,10 +10,9 @@
 
 namespace DisqusHelper\Exception;
 
-use InvalidArgumentException;
 use DisqusHelper\Widget\WidgetInterface;
 
-class InvalidWidgetConfigurationException extends InvalidArgumentException implements ExceptionInterface
+class InvalidWidgetConfigurationException extends InvalidArgumentException
 {
     public static function forConfiguration(string $widgetId, $widget) : self
     {
