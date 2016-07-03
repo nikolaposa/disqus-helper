@@ -24,25 +24,25 @@ final class CommentsCount extends BaseWidget
     /**
      * @var array
      */
-    private static $defaultOptions = array(
+    private static $defaultOptions = [
         'url' => null,
         'label' => null,
         'as_link' => true,
         'identifier' => null,
-    );
+    ];
 
     public function getScriptName()
     {
         return self::SCRIPT_NAME;
     }
 
-    public function render(array $options = array())
+    public function render(array $options = [])
     {
         $options = array_merge(self::$defaultOptions, $options);
 
         $label = htmlspecialchars((string) $options['label'], ENT_QUOTES, 'UTF-8');
 
-        $attribs = array();
+        $attribs = [];
 
         if (isset($options['identifier'])) {
             $attribs['data-disqus-identifier'] = $options['identifier'];

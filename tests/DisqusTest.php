@@ -29,7 +29,7 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
 
     public function testConfigRetrieval()
     {
-        $disqus = new Disqus('foobar', array('title' => 'test'));
+        $disqus = new Disqus('foobar', ['title' => 'test']);
 
         $config = $disqus->getConfig();
 
@@ -49,10 +49,10 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
 
     public function testConfigIsProperlySet()
     {
-        $disqus = new Disqus('blog', array(
+        $disqus = new Disqus('blog', [
             'title' => 'My article',
             'identifier' => 'article1'
-        ));
+        ]);
 
         $config = $disqus->getConfig();
 
@@ -96,15 +96,15 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
     {
         $disqus = new Disqus('foobar');
 
-        $html = $disqus->thread(array(), 'test');
+        $html = $disqus->thread([], 'test');
     }
 
     public function testConfigRenderedProperly()
     {
-        $disqus = new Disqus('blog', array(
+        $disqus = new Disqus('blog', [
             'title' => 'My article',
             'identifier' => 'article1'
-        ));
+        ]);
 
         $html = $disqus->thread();
 
@@ -122,17 +122,17 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
 
     public function testConfigSuppliedOnInvokeRenderedProperly()
     {
-        $disqus = new Disqus('blog', array(
+        $disqus = new Disqus('blog', [
             'title' => 'My article',
             'identifier' => 'article1'
-        ));
+        ]);
 
         $html = $disqus->thread();
 
-        $html .= ' ' . $disqus(array(
+        $html .= ' ' . $disqus([
             'title' => 'Article 2',
             'identifier' => 'article2'
-        ));
+        ]);
 
         $this->assertContains('<script', $html);
         $this->assertContains('shortname', $html);
@@ -148,10 +148,10 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
     {
         $disqus = new Disqus('blog');
 
-        $html = $disqus->thread(array(), array(
+        $html = $disqus->thread([], [
             'title' => 'Article 1',
             'identifier' => 'article1'
-        ));
+        ]);
 
         $html .= ' ' . $disqus();
 
@@ -180,10 +180,10 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
 
     public function testRenderingWidgetAssetsOnlyOnceRegardlessOfNumberOfWidgetInvokations()
     {
-        $disqus = new Disqus('blog', array(
+        $disqus = new Disqus('blog', [
             'title' => 'My article',
             'identifier' => 'article1'
-        ));
+        ]);
 
         $html = $disqus->thread();
         $html .= ' ' . $disqus->thread();

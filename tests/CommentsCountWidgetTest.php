@@ -27,7 +27,7 @@ class CommentsCountWidgetTest extends \PHPUnit_Framework_TestCase
         $this->widget = new CommentsCountWidget();
     }
 
-    protected function assertHtmlTag($html, $tagName, $value = null, array $attributes = array())
+    protected function assertHtmlTag($html, $tagName, $value = null, array $attributes = [])
     {
         $this->assertStringStartsWith("<$tagName", $html);
         $this->assertStringEndsWith("</$tagName>", $html);
@@ -48,49 +48,49 @@ class CommentsCountWidgetTest extends \PHPUnit_Framework_TestCase
      */
     public function testLinkRenderingFailsIfUrlIsMissing()
     {
-        $this->widget->render(array('label' => 'Test'));
+        $this->widget->render(['label' => 'Test']);
     }
 
     public function testRenderingLinkWithFragmentInHref()
     {
-        $html = $this->widget->render(array('url' => 'http://example.com/article1.html'));
+        $html = $this->widget->render(['url' => 'http://example.com/article1.html']);
 
-        $this->assertHtmlTag($html, 'a', null, array('href' => 'http://example.com/article1.html#disqus_thread'));
+        $this->assertHtmlTag($html, 'a', null, ['href' => 'http://example.com/article1.html#disqus_thread']);
     }
 
     public function testRenderingLinkWithIdentifierAttribute()
     {
-        $html = $this->widget->render(array(
+        $html = $this->widget->render([
             'url' => 'http://example.com/article1.html',
             'identifier' => 'article1'
-        ));
+        ]);
 
-        $this->assertHtmlTag($html, 'a', null, array('identifier' => 'article1'));
+        $this->assertHtmlTag($html, 'a', null, ['identifier' => 'article1']);
     }
 
     public function testRenderingLinkWithLabel()
     {
-        $html = $this->widget->render(array(
+        $html = $this->widget->render([
             'url' => 'http://example.com/article1.html',
             'label' => 'Test'
-        ));
+        ]);
 
         $this->assertHtmlTag($html, 'a', 'Test');
     }
 
     public function testRenderingSpanTag()
     {
-        $html = $this->widget->render(array(
+        $html = $this->widget->render([
             'as_link' => false,
             'url' => 'http://example.com/article1.html',
             'identifier' => 'article1',
             'label' => 'Test'
-        ));
+        ]);
 
-        $this->assertHtmlTag($html, 'span', 'Test', array(
+        $this->assertHtmlTag($html, 'span', 'Test', [
             'class' => 'disqus-comment-count',
             'url' => 'http://example.com/article1.html',
             'identifier' => 'article1'
-        ));
+        ]);
     }
 }

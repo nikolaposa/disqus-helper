@@ -24,7 +24,7 @@ final class Thread implements WidgetInterface
         return self::SCRIPT_NAME;
     }
 
-    public function render(array $options = array())
+    public function render(array $options = [])
     {
         return '<div id="disqus_thread"></div>';
     }

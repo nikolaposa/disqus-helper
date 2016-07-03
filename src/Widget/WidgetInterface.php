@@ -24,5 +24,5 @@ interface WidgetInterface
      * @param array $options OPTIONAL
      * @return string
      */
-    public function render(array $options = array());
+    public function render(array $options = []);
 }

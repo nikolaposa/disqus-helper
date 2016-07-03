@@ -25,15 +25,15 @@ final class Disqus
     /**
      * @var array
      */
-    private $widgets = array(
+    private $widgets = [
         'thread' => 'DisqusHelper\\Widget\\Thread',
         'commentscount' => 'DisqusHelper\\Widget\\CommentsCount'
-    );
+    ];
 
     /**
      * @var array
      */
-    private $usedWidgets = array();
+    private $usedWidgets = [];
 
     /**
      * @var bool
@@ -45,9 +45,9 @@ final class Disqus
      * @param array $config OPTIONAL Any additional Disqus configuration.
      * @link https://help.disqus.com/customer/portal/articles/472098-javascript-configuration-variables
      */
-    public function __construct($shortName, array $config = array())
+    public function __construct($shortName, array $config = [])
     {
-        $config = array_merge(array('shortname' => $shortName), $config);
+        $config = array_merge(['shortname' => $shortName], $config);
         $this->config = $config;
     }
 
@@ -118,7 +118,7 @@ final class Disqus
             $this->usedWidgets[$widgetName] = $widget;
         }
 
-        return $widget->render($options ?: array());
+        return $widget->render($options ?: []);
     }
 
     /**
@@ -130,7 +130,7 @@ final class Disqus
      * @return string
      * @throws Exception\RuntimeException
      */
-    public function __invoke(array $config = array())
+    public function __invoke(array $config = [])
     {
         if ($this->initialized) {
             throw new Exception\RuntimeException(get_class($this) . ' widget has already been initialized');
