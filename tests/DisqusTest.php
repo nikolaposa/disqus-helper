@@ -27,12 +27,12 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->disqus = new Disqus('foobar');
+        $this->disqus = Disqus::create('foobar');
     }
 
     public function testConfigRetrieval()
     {
-        $disqus = new Disqus('foobar', ['title' => 'test']);
+        $disqus = Disqus::create('foobar', ['title' => 'test']);
 
         $config = $disqus->getConfig();
 
@@ -42,7 +42,7 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
 
     public function testShortnameIsPresentInConfig()
     {
-        $disqus = new Disqus('foobar');
+        $disqus = Disqus::create('foobar');
 
         $config = $disqus->getConfig();
 
@@ -52,7 +52,7 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
 
     public function testConfigIsProperlySet()
     {
-        $disqus = new Disqus('blog', [
+        $disqus = Disqus::create('blog', [
             'title' => 'My article',
             'identifier' => 'article1'
         ]);
@@ -68,13 +68,13 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(WidgetNotFoundException::class);
 
-        $disqus = new Disqus('foobar');
+        $disqus = Disqus::create('foobar');
         $disqus->undefined();
     }
 
     public function testWidgetRendering()
     {
-        $disqus = new Disqus('foobar');
+        $disqus = Disqus::create('foobar');
 
         $html = $disqus->thread();
         $this->assertInternalType('string', $html);
@@ -85,7 +85,7 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $disqus = new Disqus('foobar');
+        $disqus = Disqus::create('foobar');
 
         $disqus->thread('test');
     }
@@ -94,14 +94,14 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $disqus = new Disqus('foobar');
+        $disqus = Disqus::create('foobar');
 
         $disqus->thread([], 'test');
     }
 
     public function testConfigRenderedProperly()
     {
-        $disqus = new Disqus('blog', [
+        $disqus = Disqus::create('blog', [
             'title' => 'My article',
             'identifier' => 'article1'
         ]);
@@ -122,7 +122,7 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
 
     public function testConfigSuppliedOnInvokeRenderedProperly()
     {
-        $disqus = new Disqus('blog', [
+        $disqus = Disqus::create('blog', [
             'title' => 'My article',
             'identifier' => 'article1'
         ]);
@@ -146,7 +146,7 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
 
     public function testConfigSuppliedThroughWidgetInvokation()
     {
-        $disqus = new Disqus('blog');
+        $disqus = Disqus::create('blog');
 
         $html = $disqus->thread([], [
             'title' => 'Article 1',
@@ -167,7 +167,7 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
 
     public function testRenderingWidgetAssets()
     {
-        $disqus = new Disqus('blog');
+        $disqus = Disqus::create('blog');
 
         $html = $disqus->thread();
 
@@ -180,7 +180,7 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
 
     public function testRenderingWidgetAssetsOnlyOnceRegardlessOfNumberOfWidgetInvokations()
     {
-        $disqus = new Disqus('blog', [
+        $disqus = Disqus::create('blog', [
             'title' => 'My article',
             'identifier' => 'article1'
         ]);
@@ -199,7 +199,7 @@ class DisqusTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(RuntimeException::class);
 
-        $disqus = new Disqus('foobar');
+        $disqus = Disqus::create('foobar');
 
         $disqus->thread();
 

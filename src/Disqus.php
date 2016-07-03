@@ -38,22 +38,33 @@ final class Disqus
      */
     private $initialized = false;
 
+    public function __construct()
+    {
+    }
+
     /**
      * @param string $shortName Unique identifier of some Disqus website.
-     * @param array $config OPTIONAL Any additional Disqus configuration.
+     * @param array $config OPTIONAL Any additional Disqus configuration (https://help.disqus.com/customer/portal/articles/472098-javascript-configuration-variables).
      * @param WidgetLocatorInterface $widgetLocator OPTIONAL
-     * @link https://help.disqus.com/customer/portal/articles/472098-javascript-configuration-variables
+     *
+     * @return Disqus
      */
-    public function __construct(string $shortName, array $config = [], WidgetLocatorInterface $widgetLocator = null)
-    {
-        $config = array_merge(['shortname' => $shortName], $config);
-        $this->config = $config;
+    public static function create(
+        string $shortName,
+        array $config = [],
+        WidgetLocatorInterface $widgetLocator = null
+    ) {
+        $disqusHelper = new self();
+
+        $disqusHelper->config = array_merge(['shortname' => $shortName], $config);
 
         if (is_null($widgetLocator)) {
             $widgetLocator = WidgetManager::createWithDefaultWidgets();
         }
 
-        $this->widgetLocator = $widgetLocator;
+        $disqusHelper->widgetLocator = $widgetLocator;
+
+        return $disqusHelper;
     }
 
     /**

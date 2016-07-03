@@ -12,7 +12,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use DisqusHelper\Disqus;
 
-$disqus = new Disqus('blog');
+$disqus = Disqus::create('blog');
 
 echo $disqus->thread([], [
     'title' => 'My article',
