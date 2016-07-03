@@ -19,4 +19,4 @@ echo $disqus->thread([], [
     'identifier' => 'article1'
 ]) . "\n\n";
 
-echo $disqus();
+echo $disqus->getCode();

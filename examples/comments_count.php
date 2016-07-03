@@ -17,4 +17,4 @@ $disqus = Disqus::create('blog');
 echo $disqus->commentsCount(['url' => 'http://example.com/article1.html']) . "\n\n";
 echo $disqus->commentsCount(['url' => 'http://example.com/article1.html', 'as_link' => false]) . "\n\n";
 
-echo $disqus();
+echo $disqus->getCode();

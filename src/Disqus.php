@@ -73,7 +73,7 @@ final class Disqus
 
         return $disqusHelper;
     }
-    
+
     public function getShortName() : string
     {
         return $this->shortName;
@@ -123,23 +123,21 @@ final class Disqus
     }
 
     /**
-     * Loads Disqus configuration and necessary assets for used widgets.
+     * Builds JS code which loads configuration and necessary assets.
      *
      * This method should be called after using and rendering widgets, usually before closing </body> tag.
-     *
-     * @param array $config OPTIONAL Disqus configuration (https://help.disqus.com/customer/portal/articles/472098-javascript-configuration-variables)
      *
      * @throws Exception\RuntimeException
      *
      * @return string
      */
-    public function __invoke(array $config = [])
+    public function getCode() : string
     {
         if ($this->initialized) {
             throw new Exception\RuntimeException(get_class($this) . ' widget has already been initialized');
         }
 
-        $config = array_merge($this->config, $config, ['shortname' => $this->shortName]);
+        $config = array_merge($this->config, ['shortname' => $this->shortName]);
 
         $html = '<script type="text/javascript">';
         $indent = '    ';
@@ -173,5 +171,10 @@ final class Disqus
         $this->initialized = true;
 
         return $html;
+    }
+
+    public function __toString() : string
+    {
+        return $this->getCode();
     }
 }
