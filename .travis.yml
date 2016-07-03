@@ -20,10 +20,11 @@ matrix:
 
 install:
   - travis_retry composer install --no-interaction
+  - travis_retry wget https://scrutinizer-ci.com/ocular.phar
 
 script:
   - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then ./vendor/bin/phpunit --disallow-test-output --report-useless-tests --coverage-clover ./clover.xml ; else ./vendor/bin/phpunit --disallow-test-output ; fi
   - if [[ $EXECUTE_CS_CHECK == 'true' ]]; then ./vendor/bin/php-cs-fixer fix -v --diff --dry-run ; fi
 
 after_script:
-  - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover ./clover.xml ; fi
+  - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then php ocular.phar code-coverage:upload --format=php-clover ./clover.xml ; fi
