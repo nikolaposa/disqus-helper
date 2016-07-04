@@ -59,28 +59,19 @@ final class Code
         return $this->config;
     }
 
-    public function addScriptFile(string $fileName) : Code
+    public function addScriptFile(string $name, array $options = []) : Code
     {
-        $this->doAddScriptFile($fileName, false);
+        if (!isset($this->scriptFiles[$name])) {
+            $data = array_merge([
+                'name' => $name,
+                'id' => null,
+                'lazy_load' => false,
+            ], $options);
 
-        return $this;
-    }
-
-    public function addLazyLoadedScriptFile(string $fileName) : Code
-    {
-        $this->doAddScriptFile($fileName, true);
-
-        return $this;
-    }
-
-    private function doAddScriptFile(string $fileName, bool $lazyLoad)
-    {
-        if (!isset($this->scriptFiles[$fileName])) {
-            $this->scriptFiles[$fileName] = [
-                'fileName' => $fileName,
-                'lazyLoad' => $lazyLoad,
-            ];
+            $this->scriptFiles[$name] = $data;
         }
+
+        return $this;
     }
 
     public function hasScriptFile(string $fileName) : bool
@@ -100,7 +91,7 @@ final class Code
         $this->buildConfigVariablesHtml();
         $this->buildJsFilesHtml();
 
-        return implode(PHP_EOL . PHP_EOL, $this->htmlFragments);
+        return PHP_EOL . implode(PHP_EOL . PHP_EOL, $this->htmlFragments) . PHP_EOL;
     }
 
     private function buildConfigVariablesHtml()
@@ -128,29 +119,31 @@ final class Code
 
     private function buildJsFilesHtml()
     {
-        foreach ($this->scriptFiles as $fileInfo) {
-            $fileName = $fileInfo['fileName'];
-
-            if ($fileInfo['lazyLoad']) {
-                $this->htmlFragments[] = $this->renderLazyLoadedJsFile($fileName);
+        foreach ($this->scriptFiles as $fileData) {
+            if ($fileData['lazy_load']) {
+                $this->htmlFragments[] = $this->renderLazyLoadedJsFile($fileData);
                 continue;
             }
 
-            $this->htmlFragments[] = $this->renderJsFile($fileName);
+            $this->htmlFragments[] = $this->renderJsFile($fileData);
         }
     }
 
-    private function renderJsFile(string $fileName) : string
+    private function renderJsFile(array $fileData) : string
     {
-        return sprintf('<script src="%s" async></script>', $this->getJsFileUrl($fileName));
+        return sprintf(
+            '<script id="%2$s" src="%1$s" async></script>',
+            $this->getJsFileUrl($fileData['name']),
+            $fileData['id']
+        );
     }
 
-    private function renderLazyLoadedJsFile(string $fileName) : string
+    private function renderLazyLoadedJsFile(array $fileData) : string
     {
         $script = '<script>' . PHP_EOL;
         $script .= self::INDENT . '(function() {' . PHP_EOL;
         $script .= self::INDENT . self::INDENT . 'var d = document, s = d.createElement("script");' . PHP_EOL;
-        $script .= self::INDENT . self::INDENT . 's.src = "' . $this->getJsFileUrl($fileName) . '";' . PHP_EOL;
+        $script .= self::INDENT . self::INDENT . 's.src = "' . $this->getJsFileUrl($fileData['name']) . '";' . PHP_EOL;
         $script .= self::INDENT . self::INDENT . 's.setAttribute("data-timestamp", +new Date());' . PHP_EOL;
         $script .= self::INDENT . self::INDENT . '(d.head || d.body).appendChild(s);' . PHP_EOL;
         $script .= self::INDENT . '})();' . PHP_EOL;

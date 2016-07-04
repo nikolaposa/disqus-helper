@@ -27,7 +27,9 @@ final class ThreadWidget implements WidgetInterface
 
     public function visit(Code $code) : Code
     {
-        $code->addLazyLoadedScriptFile(self::SCRIPT_NAME);
+        $code->addScriptFile(self::SCRIPT_NAME, [
+            'lazy_load' => true,
+        ]);
 
         return $code;
     }

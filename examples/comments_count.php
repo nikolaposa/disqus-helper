@@ -14,7 +14,15 @@ use DisqusHelper\Disqus;
 
 $disqus = Disqus::create('blog');
 
-echo $disqus->commentsCount(['url' => 'http://example.com/article1.html']) . "\n\n";
-echo $disqus->commentsCount(['url' => 'http://example.com/article1.html', 'as_link' => false]) . "\n\n";
+echo $disqus->commentsCount([
+    'identifier' => 'article1',
+    'url' => 'http://example.com/article1.html'
+]) . "\n\n";
+
+echo $disqus->commentsCount([
+    'identifier' => 'article1',
+    'url' => 'http://example.com/article2.html',
+    'as_link' => false
+]) . "\n\n";
 
 echo $disqus->getCode();

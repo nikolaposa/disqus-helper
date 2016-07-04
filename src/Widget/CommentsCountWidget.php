@@ -20,6 +20,7 @@ use DisqusHelper\Code;
 final class CommentsCountWidget extends BaseWidget
 {
     const SCRIPT_NAME = 'count.js';
+    const SCRIPT_ID = 'dsq-count-scr';
 
     /**
      * @var array
@@ -74,7 +75,10 @@ final class CommentsCountWidget extends BaseWidget
 
     public function visit(Code $code) : Code
     {
-        $code->addScriptFile(self::SCRIPT_NAME);
+        $code->addScriptFile(self::SCRIPT_NAME, [
+            'id' => self::SCRIPT_ID,
+            'lazy_load' => false,
+        ]);
 
         return $code;
     }

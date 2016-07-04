@@ -33,13 +33,6 @@ class CodeTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($code->hasScriptFile('test.js'));
     }
 
-    public function testAddingLazyLoadedScriptFile()
-    {
-        $code = Code::create('test')->addLazyLoadedScriptFile('test.js');
-
-        $this->assertTrue($code->hasScriptFile('test.js'));
-    }
-
     public function testRenderingHtmlWithConfiguration()
     {
         $code = Code::create('test')
@@ -75,6 +68,31 @@ class CodeTest extends PHPUnit_Framework_TestCase
         $this->assertContains('test.disqus.com/count.js', $html);
     }
 
+    public function testRenderingLazyLoadedScriptFile()
+    {
+        $code = Code::create('test')->addScriptFile('embed.js', [
+            'lazy_load' => true,
+        ]);
+
+        $html = $code->toHtml();
+
+        $this->assertContains('<script>', $html);
+        $this->assertContains('d.createElement("script")', $html);
+        $this->assertContains('test.disqus.com/embed.js', $html);
+    }
+
+    public function testRenderingScriptFileWithId()
+    {
+        $code = Code::create('test')->addScriptFile('count.js', [
+            'lazy_load' => false,
+            'id' => 'identifier',
+        ]);
+
+        $html = $code->toHtml();
+
+        $this->assertContains('<script id="identifier" src="//test.disqus.com/count.js" async></script>', $html);
+    }
+
     public function testToHtmlInvokedWhenCastingToString()
     {
         $code = Code::create('test')->addScriptFile('embed.js');
@@ -88,7 +106,7 @@ class CodeTest extends PHPUnit_Framework_TestCase
     {
         $code = Code::create('test')
             ->addScriptFile('embed.js')
-            ->addLazyLoadedScriptFile('embed.js')
+            ->addScriptFile('embed.js')
             ->addScriptFile('embed.js');
 
         $html = $code->toHtml();
