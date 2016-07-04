@@ -15,8 +15,9 @@ use DisqusHelper\Disqus;
 $disqus = Disqus::create('blog');
 
 $disqus->configure([
-    'title' => 'My article',
-    'identifier' => 'article1'
+    'language' => 'en',
+    'page.identifier' => 'article1',
+    'page.title' => 'My article',
 ]);
 
 echo $disqus->thread() . "\n\n";

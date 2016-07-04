@@ -35,8 +35,8 @@ $disqus = Disqus::create('disqus_shortname');
         <?php
             //Page-specific Disqus configuration
             $disqus->configure([
-                'title' => 'My article',
-                'identifier' => 'article1'
+                'page.identifier' => 'article1',
+                'page.title' => 'My article',
             ]);
         ?>
     </head>
