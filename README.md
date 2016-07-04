@@ -18,7 +18,7 @@ composer require nikolaposa/disqus-helper
 
 ## Usage
 
-**Configuration**
+**Initialization**
 ```php
 use DisqusHelper\Disqus;
 
