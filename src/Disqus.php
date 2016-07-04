@@ -14,6 +14,9 @@ use DisqusHelper\Widget\WidgetLocatorInterface;
 use DisqusHelper\Widget\WidgetManager;
 
 /**
+ * @method string thread(array $options = [])
+ * @method string commentsCount(array $options = [])
+ *
  * @author Nikola Posa <posa.nikola@gmail.com>
  */
 final class Disqus
