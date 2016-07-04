@@ -44,29 +44,28 @@ class CodeTest extends PHPUnit_Framework_TestCase
 
         $html = $code->toHtml();
 
-        $this->assertStringStartsWith('<script>', $html);
-        $this->assertContains("var disqus_config = function () {", $html);
-        $this->assertContains("this.page.identifier = 'article1'", $html);
-        $this->assertContains("this.page.category_id = 7", $html);
-        $this->assertContains('var d = document, s = d.createElement("script");', $html);
-        $this->assertContains('s.src = "//test.disqus.com/embed.js"', $html);
-        $this->assertContains('(d.head || d.body).appendChild(s);', $html);
-        $this->assertStringEndsWith('</script>', $html);
+        $scripts = substr_count($html, '<script');
+        $this->assertEquals(2, $scripts);
+        $scripts = substr_count($html, '</script>');
+        $this->assertEquals(2, $scripts);
+        $this->assertContains("disqus_config", $html);
+        $this->assertContains("page.identifier = 'article1'", $html);
+        $this->assertContains("page.category_id = 7", $html);
+        $this->assertContains('test.disqus.com/embed.js', $html);
     }
 
     public function testRenderingHtmlWithoutConfiguration()
     {
-        $code = Code::create('test')
-            ->addScriptFile('count.js');
+        $code = Code::create('test')->addScriptFile('count.js');
 
         $html = $code->toHtml();
 
-        $this->assertStringStartsWith('<script>', $html);
-        $this->assertNotContains("var disqus_config = function () {", $html);
-        $this->assertContains('var d = document, s = d.createElement("script");', $html);
-        $this->assertContains('s.src = "//test.disqus.com/count.js"', $html);
-        $this->assertContains('(d.head || d.body).appendChild(s);', $html);
-        $this->assertStringEndsWith('</script>', $html);
+        $scripts = substr_count($html, '<script');
+        $this->assertEquals(1, $scripts);
+        $scripts = substr_count($html, '</script>');
+        $this->assertEquals(1, $scripts);
+        $this->assertNotContains("disqus_config", $html);
+        $this->assertContains('test.disqus.com/count.js', $html);
     }
 
     public function testToHtmlInvokedWhenCastingToString()
@@ -75,11 +74,7 @@ class CodeTest extends PHPUnit_Framework_TestCase
 
         $html = (string) $code;
 
-        $this->assertStringStartsWith('<script>', $html);
-        $this->assertContains('var d = document, s = d.createElement("script");', $html);
-        $this->assertContains('s.src = "//test.disqus.com/embed.js"', $html);
-        $this->assertContains('(d.head || d.body).appendChild(s);', $html);
-        $this->assertStringEndsWith('</script>', $html);
+        $this->assertContains('test.disqus.com/embed.js', $html);
     }
 
     public function testSameJsFilesRenderedOnlyOnce()

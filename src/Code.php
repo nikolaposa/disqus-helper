@@ -32,7 +32,7 @@ final class Code
     /**
      * @var string
      */
-    private $html;
+    private $htmlFragments;
 
     private function __construct()
     {
@@ -62,7 +62,22 @@ final class Code
     public function addScriptFile(string $fileName) : Code
     {
         if (!isset($this->scriptFiles[$fileName])) {
-            $this->scriptFiles[$fileName] = $fileName;
+            $this->scriptFiles[$fileName] = [
+                'fileName' => $fileName,
+                'lazyLoad' => false,
+            ];
+        }
+
+        return $this;
+    }
+
+    public function addLazyLoadedScriptFile(string $fileName) : Code
+    {
+        if (!isset($this->scriptFiles[$fileName])) {
+            $this->scriptFiles[$fileName] = [
+                'fileName' => $fileName,
+                'lazyLoad' => true,
+            ];
         }
 
         return $this;
@@ -80,49 +95,74 @@ final class Code
 
     public function toHtml() : string
     {
-        $this->html = '';
+        $this->htmlFragments = [];
 
-        $this->html = '<script>';
-        $this->html .= PHP_EOL;
+        $this->buildConfigVariablesHtml();
+        $this->buildJsFilesHtml();
 
-        $this->renderConfigVariables();
-        $this->renderJsFiles();
-
-        $this->html = rtrim($this->html, PHP_EOL);
-        $this->html .= PHP_EOL;
-        $this->html .= '</script>';
-
-        return $this->html;
+        return implode(PHP_EOL . PHP_EOL, $this->htmlFragments);
     }
 
-    private function renderConfigVariables()
+    private function buildConfigVariablesHtml()
     {
         if (empty($this->config)) {
             return;
         }
 
-        $this->html .= self::INDENT . 'var disqus_config = function () {' . PHP_EOL;
+        $script = '<script>' . PHP_EOL;
+
+        $script .= self::INDENT . 'var disqus_config = function () {' . PHP_EOL;
 
         foreach ($this->config as $key => $value) {
             if (is_string($value)) {
                 $value = addslashes($value);
                 $value = "'$value'";
             }
-            $this->html .= self::INDENT . self::INDENT . "this.$key = $value;" . PHP_EOL;
+            $script .= self::INDENT . self::INDENT . "this.$key = $value;" . PHP_EOL;
         }
 
-        $this->html .= self::INDENT . '};' . PHP_EOL . PHP_EOL;
+        $script .= self::INDENT . '};' . PHP_EOL ;
+
+        $script .= '</script>';
+
+        $this->htmlFragments[] = $script;
     }
 
-    private function renderJsFiles()
+    private function buildJsFilesHtml()
     {
-        foreach ($this->scriptFiles as $fileName) {
-            $this->html .= self::INDENT . '(function() {' . PHP_EOL;
-            $this->html .= self::INDENT . self::INDENT . 'var d = document, s = d.createElement("script");' . PHP_EOL;
-            $this->html .= self::INDENT . self::INDENT . 's.src = "//' . $this->shortName . '.disqus.com/' . $fileName . '";' . PHP_EOL;
-            $this->html .= self::INDENT . self::INDENT . 's.setAttribute("data-timestamp", +new Date());' . PHP_EOL;
-            $this->html .= self::INDENT . self::INDENT . '(d.head || d.body).appendChild(s);' . PHP_EOL;
-            $this->html .= self::INDENT . '})();' . PHP_EOL . PHP_EOL;
+        foreach ($this->scriptFiles as $fileInfo) {
+            $fileName = $fileInfo['fileName'];
+
+            if ($fileInfo['lazyLoad']) {
+                $this->htmlFragments[] = $this->renderLazyLoadedJsFile($fileName);
+                continue;
+            }
+
+            $this->htmlFragments[] = $this->renderJsFile($fileName);
         }
+    }
+
+    private function renderJsFile(string $fileName) : string
+    {
+        return sprintf('<script src="%s" async></script>', $this->getJsFileUrl($fileName));
+    }
+
+    private function renderLazyLoadedJsFile(string $fileName) : string
+    {
+        $script = '<script>' . PHP_EOL;
+        $script .= self::INDENT . '(function() {' . PHP_EOL;
+        $script .= self::INDENT . self::INDENT . 'var d = document, s = d.createElement("script");' . PHP_EOL;
+        $script .= self::INDENT . self::INDENT . 's.src = "' . $this->getJsFileUrl($fileName) . '";' . PHP_EOL;
+        $script .= self::INDENT . self::INDENT . 's.setAttribute("data-timestamp", +new Date());' . PHP_EOL;
+        $script .= self::INDENT . self::INDENT . '(d.head || d.body).appendChild(s);' . PHP_EOL;
+        $script .= self::INDENT . '})();' . PHP_EOL;
+        $script .= '</script>';
+
+        return $script;
+    }
+
+    private function getJsFileUrl(string $fileName)
+    {
+        return '//' . $this->shortName . '.disqus.com/' . $fileName;
     }
 }
