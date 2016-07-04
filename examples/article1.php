@@ -11,7 +11,7 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 $config = [
-    'shortname' => 'nikolaposa',
+    'shortname' => 'disqus_shortname',
 ];
 
 $disqus = DisqusHelper\Disqus::create($config['shortname']);
