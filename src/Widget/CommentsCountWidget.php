@@ -61,10 +61,12 @@ final class CommentsCountWidget extends BaseWidget
 
     private function renderLink(string $href, string $label, array $attribs) : string
     {
-        return '<a href="' . $href . '"'
-        . ' ' . $this->htmlAttribsToString($attribs) . '>'
-        . $label
-        . '</a>';
+        $attribs['href'] = $href;
+
+        return '<a'
+            . ' ' . $this->htmlAttribsToString($attribs) . '>'
+            . $label
+            . '</a>';
     }
 
     private function renderElement(string $label, array $attribs) : string

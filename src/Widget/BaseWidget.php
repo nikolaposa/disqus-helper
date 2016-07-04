@@ -21,16 +21,9 @@ abstract class BaseWidget implements WidgetInterface
 
         foreach ($attribs as $key => $val) {
             $key = htmlspecialchars($key, ENT_QUOTES);
+            $val = htmlspecialchars($val, ENT_QUOTES);
 
-            if (is_array($val)) {
-                $val = implode(' ', $val);
-            }
-
-            if (strpos($val, '"') !== false) {
-                $html .= "$key='$val' ";
-            } else {
-                $html .= "$key=\"$val\" ";
-            }
+            $html .= "$key=\"$val\" ";
         }
 
         $html = rtrim($html);
