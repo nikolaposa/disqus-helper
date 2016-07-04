@@ -11,7 +11,6 @@
 namespace DisqusHelper\Widget;
 
 use DisqusHelper\Code;
-use DisqusHelper\Exception\RuntimeException;
 
 /**
  * Comments count widget.
@@ -45,10 +44,6 @@ final class CommentsCountWidget extends BaseWidget
         }
 
         if ($options['as_link']) {
-            if (empty($options['url'])) {
-                throw new RuntimeException("URL option is missing for the Comments count widget");
-            }
-
             return $this->renderLink($options['url'] . '#disqus_thread', $label, $attribs);
         }
 

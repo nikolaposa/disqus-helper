@@ -10,7 +10,9 @@
 
 namespace DisqusHelper\Exception;
 
-class WidgetNotFoundException extends RuntimeException
+use RuntimeException;
+
+class WidgetNotFoundException extends RuntimeException implements ExceptionInterface
 {
     public static function forWidgetId(string $widgetId) : self
     {

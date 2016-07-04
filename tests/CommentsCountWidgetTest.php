@@ -12,7 +12,6 @@ namespace DisqusHelper\Tests;
 
 use PHPUnit_Framework_TestCase;
 use DisqusHelper\Widget\CommentsCountWidget;
-use DisqusHelper\Exception\RuntimeException;
 use DisqusHelper\Code;
 
 /**
@@ -44,13 +43,6 @@ class CommentsCountWidgetTest extends PHPUnit_Framework_TestCase
                 self::assertRegexp('|' . preg_quote($key) . '\s?=\s?"' . preg_quote($val, '|') . '"|', $html);
             }
         }
-    }
-
-    public function testLinkRenderingFailsIfUrlIsMissing()
-    {
-        $this->expectException(RuntimeException::class);
-
-        $this->widget->render(['label' => 'Test']);
     }
 
     public function testRenderingLinkWithFragmentInHref()
