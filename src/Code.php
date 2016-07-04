@@ -110,7 +110,6 @@ final class Code
         }
 
         $script = '<script>' . PHP_EOL;
-
         $script .= self::INDENT . 'var disqus_config = function () {' . PHP_EOL;
 
         foreach ($this->config as $key => $value) {
@@ -122,7 +121,6 @@ final class Code
         }
 
         $script .= self::INDENT . '};' . PHP_EOL ;
-
         $script .= '</script>';
 
         $this->htmlFragments[] = $script;
