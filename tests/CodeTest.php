@@ -33,6 +33,13 @@ class CodeTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($code->hasScriptFile('test.js'));
     }
 
+    public function testAddingLazyLoadedScriptFile()
+    {
+        $code = Code::create('test')->addLazyLoadedScriptFile('test.js');
+
+        $this->assertTrue($code->hasScriptFile('test.js'));
+    }
+
     public function testRenderingHtmlWithConfiguration()
     {
         $code = Code::create('test')
@@ -81,7 +88,7 @@ class CodeTest extends PHPUnit_Framework_TestCase
     {
         $code = Code::create('test')
             ->addScriptFile('embed.js')
-            ->addScriptFile('embed.js')
+            ->addLazyLoadedScriptFile('embed.js')
             ->addScriptFile('embed.js');
 
         $html = $code->toHtml();

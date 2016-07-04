@@ -30,9 +30,9 @@ final class Code
     private $scriptFiles = [];
 
     /**
-     * @var string
+     * @var array
      */
-    private $htmlFragments;
+    private $htmlFragments = [];
 
     private function __construct()
     {
@@ -61,26 +61,26 @@ final class Code
 
     public function addScriptFile(string $fileName) : Code
     {
-        if (!isset($this->scriptFiles[$fileName])) {
-            $this->scriptFiles[$fileName] = [
-                'fileName' => $fileName,
-                'lazyLoad' => false,
-            ];
-        }
+        $this->doAddScriptFile($fileName, false);
 
         return $this;
     }
 
     public function addLazyLoadedScriptFile(string $fileName) : Code
     {
+        $this->doAddScriptFile($fileName, true);
+
+        return $this;
+    }
+
+    private function doAddScriptFile(string $fileName, bool $lazyLoad)
+    {
         if (!isset($this->scriptFiles[$fileName])) {
             $this->scriptFiles[$fileName] = [
                 'fileName' => $fileName,
-                'lazyLoad' => true,
+                'lazyLoad' => $lazyLoad,
             ];
         }
-
-        return $this;
     }
 
     public function hasScriptFile(string $fileName) : bool
