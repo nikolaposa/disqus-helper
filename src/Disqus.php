@@ -54,11 +54,7 @@ final class Disqus
 
         $disqusHelper->shortName = $shortName;
 
-        if (is_null($widgetLocator)) {
-            $widgetLocator = WidgetManager::createWithDefaultWidgets();
-        }
-
-        $disqusHelper->widgetLocator = $widgetLocator;
+        $disqusHelper->widgetLocator = $widgetLocator ?? WidgetManager::createWithDefaultWidgets();
 
         $disqusHelper->code = Code::create($shortName);
 
