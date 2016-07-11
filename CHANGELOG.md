@@ -1,9 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## 2.0.1 - [Unreleased]
+## 2.1.0 - 2016-07-11
 ### Added
 - `strict_types` declare() directive in all source files
+- new examples
 
 ## 2.0.0 - 2016-07-04
 ### Added
