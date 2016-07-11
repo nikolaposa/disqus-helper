@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.1.0 - [Unreleased]
+### Fixed
+- Disqus constructor should be private; enforcing usage of named constructor
+
 ## 2.1.0 - 2016-07-11
 ### Added
 - `strict_types` declare() directive in all source files
@@ -22,4 +26,4 @@ All notable changes to this project will be documented in this file.
 ## 1.2.x
 This release is abandoned, please consider upgrading to 2.0.x.
 
-[Unreleased]: https://github.com/nikolaposa/disqus-helper/compare/2.0.0...HEAD
+[Unreleased]: https://github.com/nikolaposa/disqus-helper/compare/2.1.0...HEAD
