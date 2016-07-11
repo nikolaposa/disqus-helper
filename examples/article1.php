@@ -8,6 +8,8 @@
  * located at the package root folder.
  */
 
+declare(strict_types=1);
+
 require __DIR__ . '/../vendor/autoload.php';
 
 $config = [

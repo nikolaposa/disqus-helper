@@ -8,6 +8,8 @@
  * located at the package root folder.
  */
 
+declare(strict_types=1);
+
 namespace DisqusHelper;
 
 final class Code
@@ -152,7 +154,7 @@ final class Code
         return $script;
     }
 
-    private function getJsFileUrl(string $fileName)
+    private function getJsFileUrl(string $fileName) : string
     {
         return '//' . $this->shortName . '.disqus.com/' . $fileName;
     }
