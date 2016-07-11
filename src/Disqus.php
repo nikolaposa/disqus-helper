@@ -38,7 +38,7 @@ final class Disqus
      */
     private $code;
 
-    public function __construct()
+    private function __construct()
     {
     }
 
