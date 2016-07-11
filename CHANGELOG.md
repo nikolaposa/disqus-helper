@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2.0.1 - [Unreleased]
+### Added
+- `strict_types` declare() directive in all source files
+
 ## 2.0.0 - 2016-07-04
 ### Added
 - PHP 7 return type hints
@@ -17,4 +21,4 @@ All notable changes to this project will be documented in this file.
 ## 1.2.x
 This release is abandoned, please consider upgrading to 2.0.x.
 
-[Unreleased]: https://github.com/nikolaposa/disqus-helper/compare/1.2.x...HEAD
+[Unreleased]: https://github.com/nikolaposa/disqus-helper/compare/2.0.0...HEAD
