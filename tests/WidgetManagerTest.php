@@ -8,7 +8,7 @@
  * located at the package root folder.
  */
 
-declare(strict_types=1);
+declare (strict_types=1);
 
 namespace DisqusHelper\Tests;
 
@@ -120,18 +120,19 @@ class WidgetManagerTest extends PHPUnit_Framework_TestCase
         ));
 
         $widgetManager = WidgetManager::create([
-            'myWidget' => function() {
-                return new class {
-                    public function getScriptName()
-                    {
-                        return 'test.js';
-                    }
+            'myWidget' => function () {
+                return new class
+ {
+     public function getScriptName()
+     {
+         return 'test.js';
+     }
 
-                    public function render(array $options = [])
-                    {
-                        return '<div id="my_widget"></div>';
-                    }
-                };
+     public function render(array $options = [])
+     {
+         return '<div id="my_widget"></div>';
+     }
+ };
             }
         ]);
 
