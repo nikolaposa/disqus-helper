@@ -15,8 +15,6 @@ matrix:
         - EXECUTE_CS_CHECK=true
         - EXECUTE_TEST_COVERALLS=true
     - php: hhvm
-  allow_failures:
-      - php: hhvm
 
 install:
   - travis_retry composer install --no-interaction
