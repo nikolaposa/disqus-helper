@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## 2.1.1 - 2016-07-11
+## 2.1.2 - 2017-01-01
 ### Improved
 - Updated PHP-CS-fixer.
 
@@ -30,4 +30,4 @@ All notable changes to this project will be documented in this file.
 ## 1.2.x
 This release is abandoned, please consider upgrading to 2.0.x.
 
-[Unreleased]: https://github.com/nikolaposa/disqus-helper/compare/2.1.0...HEAD
+[Unreleased]: https://github.com/nikolaposa/disqus-helper/compare/2.1.2...HEAD
