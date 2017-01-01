@@ -14,10 +14,9 @@ matrix:
       env:
         - EXECUTE_CS_CHECK=true
         - EXECUTE_TEST_COVERALLS=true
-    - php: hhvm-3.9
-      sudo: required
-      dist: trusty
-      group: edge
+    - php: hhvm
+  allow_failures:
+      - php: hhvm
 
 install:
   - travis_retry composer install --no-interaction
