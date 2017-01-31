@@ -4,7 +4,7 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nikolaposa/disqus-helper/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nikolaposa/disqus-helper/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/nikolaposa/disqus-helper/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/nikolaposa/disqus-helper/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/nikolaposa/disqus-helper/v/stable)](https://packagist.org/packages/nikolaposa/disqus-helper)
-[![PDS Skeleton](https://img.shields.io/badge/pds-skeleton-blue.svg?style=flat-square)](https://github.com/php-pds/skeleton)
+[![PDS Skeleton](https://img.shields.io/badge/pds-skeleton-blue.svg)](https://github.com/php-pds/skeleton)
 
 PHP library which facilitates integration of [Disqus](https://disqus.com/) widgets.
 
